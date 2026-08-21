@@ -129,7 +129,7 @@ import { AttendanceRecord, User } from '../../../models';
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
-              <tr *ngFor="let rec of records" class="hover:bg-slate-50/70 transition-colors" [ngClass]="{'bg-blue-50/40': selectedIds.has(rec._id)}">
+              <tr *ngFor="let rec of paginatedRecords" class="hover:bg-slate-50/70 transition-colors" [ngClass]="{'bg-blue-50/40': selectedIds.has(rec._id)}">
                 
                 <!-- Checkbox -->
                 <td class="py-3.5 px-3 w-8">
@@ -209,6 +209,65 @@ import { AttendanceRecord, User } from '../../../models';
             </tbody>
           </table>
         </div>
+
+        <!-- Pagination Controls Bar (50 per page default) -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 mt-4 border-t border-slate-100 text-xs">
+          
+          <!-- Page Info & Per-Page Selector -->
+          <div class="flex items-center gap-3 text-slate-500 font-medium">
+            <span>
+              Showing <strong class="text-slate-900 font-bold font-mono">{{ startRecordIndex }}</strong> to <strong class="text-slate-900 font-bold font-mono">{{ endRecordIndex }}</strong> of <strong class="text-slate-900 font-bold font-mono">{{ records.length }}</strong> logs
+            </span>
+            
+            <div class="flex items-center gap-1.5 pl-3 border-l border-slate-200">
+              <span class="text-[11px] font-bold text-slate-400">Rows / page:</span>
+              <select [(ngModel)]="pageSize" (change)="onPageSizeChange()" class="form-select !py-1 !px-2 text-xs font-bold text-slate-800 rounded-lg border-slate-200 cursor-pointer">
+                <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Page Navigation Buttons -->
+          <div class="flex items-center gap-1.5">
+            <button 
+              (click)="setPage(1)" 
+              [disabled]="currentPage === 1" 
+              title="First Page"
+              class="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs transition-colors shadow-2xs">
+              <i class="fa-solid fa-angles-left"></i>
+            </button>
+            <button 
+              (click)="setPage(currentPage - 1)" 
+              [disabled]="currentPage === 1" 
+              title="Previous Page"
+              class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs transition-colors flex items-center gap-1 shadow-2xs">
+              <i class="fa-solid fa-chevron-left text-[10px]"></i>
+              <span>Prev</span>
+            </button>
+
+            <span class="px-3 py-1.5 font-bold font-mono text-xs text-blue-700 bg-blue-50 rounded-lg border border-blue-200">
+              Page {{ currentPage }} of {{ totalPages }}
+            </span>
+
+            <button 
+              (click)="setPage(currentPage + 1)" 
+              [disabled]="currentPage === totalPages" 
+              title="Next Page"
+              class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs transition-colors flex items-center gap-1 shadow-2xs">
+              <span>Next</span>
+              <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            </button>
+            <button 
+              (click)="setPage(totalPages)" 
+              [disabled]="currentPage === totalPages" 
+              title="Last Page"
+              class="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs transition-colors shadow-2xs">
+              <i class="fa-solid fa-angles-right"></i>
+            </button>
+          </div>
+
+        </div>
+
       </div>
 
       <!-- Add Attendance Modal (Admin) -->
@@ -434,6 +493,39 @@ export class MasterAttendanceComponent implements OnInit {
     this.loadRecords();
   }
 
+  currentPage = 1;
+  pageSize = 50;
+  pageSizeOptions = [25, 50, 100, 200];
+  Math = Math;
+
+  get totalPages(): number {
+    return Math.ceil(this.records.length / this.pageSize) || 1;
+  }
+
+  get paginatedRecords(): AttendanceRecord[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.records.slice(start, start + this.pageSize);
+  }
+
+  get startRecordIndex(): number {
+    if (this.records.length === 0) return 0;
+    return (this.currentPage - 1) * this.pageSize + 1;
+  }
+
+  get endRecordIndex(): number {
+    return Math.min(this.currentPage * this.pageSize, this.records.length);
+  }
+
+  setPage(p: number) {
+    if (p >= 1 && p <= this.totalPages) {
+      this.currentPage = p;
+    }
+  }
+
+  onPageSizeChange() {
+    this.currentPage = 1;
+  }
+
   toggleSelect(id?: string) {
     if (!id) return;
     if (this.selectedIds.has(id)) {
@@ -444,14 +536,18 @@ export class MasterAttendanceComponent implements OnInit {
   }
 
   isAllSelected(): boolean {
-    return this.records.length > 0 && this.records.every(r => r._id && this.selectedIds.has(r._id));
+    const currentList = this.paginatedRecords;
+    return currentList.length > 0 && currentList.every(r => r._id && this.selectedIds.has(r._id));
   }
 
   toggleSelectAll() {
+    const currentList = this.paginatedRecords;
     if (this.isAllSelected()) {
-      this.selectedIds.clear();
+      currentList.forEach(r => {
+        if (r._id) this.selectedIds.delete(r._id);
+      });
     } else {
-      this.records.forEach(r => {
+      currentList.forEach(r => {
         if (r._id) this.selectedIds.add(r._id);
       });
     }
@@ -516,6 +612,7 @@ export class MasterAttendanceComponent implements OnInit {
     }).subscribe({
       next: (res) => {
         this.records = res.records || [];
+        this.currentPage = 1;
       },
       error: () => {
         this.toast.error('Failed to load master attendance logs.');

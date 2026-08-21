@@ -4,15 +4,10 @@ let isConnected = false;
 let useMemoryStore = false;
 
 const connectDB = async () => {
-  const uri = process.env.MONGODB_URI;
+  const uri = process.env.MONGODB_URI || 
+              process.env.MONGO_URI || 
+              'mongodb+srv://tejasshyani_db_user:CXhdqpF0zUcLfIEo@aicloud-dev.ajbjj6m.mongodb.net/HRMS?retryWrites=true&w=majority&appName=AICloud-Dev';
   
-  if (!uri) {
-    console.log('[HRMS Data Engine] No MONGODB_URI specified. Operating with In-Memory / Local HRMS Engine.');
-    useMemoryStore = true;
-    isConnected = true;
-    return null;
-  }
-
   try {
     mongoose.set('strictQuery', false);
     console.log(`[MongoDB] Initiating connection to: ${uri.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@')}`);
@@ -24,11 +19,8 @@ const connectDB = async () => {
     console.log(`[MongoDB Atlas] Connected successfully to: ${conn.connection.name} @ ${conn.connection.host}`);
     return conn;
   } catch (error) {
-    console.warn(`[MongoDB Warning] Live MongoDB connection failed (${error.message}).`);
-    console.log(`[HRMS Data Engine] Operating in In-Memory / Local HRMS Mode.`);
-    useMemoryStore = true;
-    isConnected = true;
-    return null;
+    console.error(`[MongoDB Error] MongoDB Atlas connection failed: ${error.message}`);
+    throw error;
   }
 };
 

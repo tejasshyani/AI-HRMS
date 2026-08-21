@@ -41,7 +41,7 @@ import { AttendanceRecord, User } from '../../../models';
           <select [(ngModel)]="selectedEmployee" (change)="loadRecords()" class="form-select text-xs !py-1.5 !px-3 font-semibold flex-1">
             <option value="All">All Staff Members</option>
             <option *ngFor="let emp of employees" [value]="emp._id">
-              {{ emp.fullName }} ({{ emp.department || 'Employee' }})
+              {{ emp.fullName }} ({{ emp.designation || 'Staff' }})
             </option>
           </select>
         </div>
@@ -150,7 +150,7 @@ import { AttendanceRecord, User } from '../../../models';
                         #{{ getEmpCode(rec) }}
                       </span>
                     </div>
-                    <div class="text-[10px] text-slate-400">{{ getEmpDept(rec) }}</div>
+                    <div class="text-[10px] text-slate-400 font-medium">{{ getEmpDesignation(rec) }}</div>
                   </div>
                 </td>
 
@@ -770,11 +770,12 @@ export class MasterAttendanceComponent implements OnInit {
     return emp?.employeeId || '';
   }
 
-  getEmpDept(rec: any): string {
+  getEmpDesignation(rec: any): string {
     if (!rec) return '';
-    if (typeof rec.userId === 'object' && rec.userId?.department) return rec.userId.department;
-    const emp = this.employees.find(e => e._id === rec.userId);
-    return emp ? (emp.department || '') : '';
+    if (typeof rec.userId === 'object' && rec.userId?.designation) return rec.userId.designation;
+    const uId = typeof rec.userId === 'object' ? rec.userId?._id : rec.userId;
+    const emp = this.employees.find(e => e._id === uId);
+    return emp ? (emp.designation || 'Staff') : (rec.userId?.designation || 'Staff');
   }
 
   getEmpAvatar(rec: any): string {

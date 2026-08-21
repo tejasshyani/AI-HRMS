@@ -96,7 +96,7 @@ import { IncentiveRecord, User } from '../../../models';
           <select [(ngModel)]="selectedEmployee" (change)="loadIncentives()" class="form-select text-xs !py-1.5 !px-3 font-semibold flex-1">
             <option value="All">All Staff Members</option>
             <option *ngFor="let emp of employees" [value]="emp._id">
-              {{ emp.fullName }} ({{ emp.department || 'Employee' }})
+              {{ emp.fullName }} ({{ emp.designation || 'Staff' }})
             </option>
           </select>
         </div>
@@ -159,7 +159,7 @@ import { IncentiveRecord, User } from '../../../models';
                         #{{ getEmpCode(rec) }}
                       </span>
                     </div>
-                    <div class="text-[10px] text-slate-400">{{ getEmpDept(rec) }}</div>
+                    <div class="text-[10px] text-slate-400 font-medium">{{ getEmpDesignation(rec) }}</div>
                   </div>
                 </td>
 
@@ -262,8 +262,8 @@ import { IncentiveRecord, User } from '../../../models';
               <span class="font-bold text-slate-900 text-xs mt-0.5 block">{{ getEmpName(selectedDetail) }}</span>
             </div>
             <div>
-              <span class="text-slate-400 block font-semibold text-[10px] uppercase">Department</span>
-              <span class="font-semibold text-slate-700 text-xs mt-0.5 block">{{ getEmpDept(selectedDetail) || 'General' }}</span>
+              <span class="text-slate-400 block font-semibold text-[10px] uppercase">Designation</span>
+              <span class="font-semibold text-slate-700 text-xs mt-0.5 block">{{ getEmpDesignation(selectedDetail) || 'Staff' }}</span>
             </div>
             <div>
               <span class="text-slate-400 block font-semibold text-[10px] uppercase">Borrower Name</span>
@@ -334,7 +334,7 @@ import { IncentiveRecord, User } from '../../../models';
               <select [(ngModel)]="newLoanData.userId" name="nUserId" class="form-select text-xs font-semibold" required>
                 <option value="" disabled>-- Choose Employee --</option>
                 <option *ngFor="let emp of employees" [value]="emp._id">
-                  {{ emp.fullName }} ({{ emp.department || 'Employee' }})
+                  {{ emp.fullName }} ({{ emp.designation || 'Staff' }} #{{ emp.employeeId }})
                 </option>
               </select>
             </div>
@@ -603,11 +603,12 @@ export class AdminIncentivesComponent implements OnInit {
     return emp?.employeeId || '';
   }
 
-  getEmpDept(rec: any): string {
+  getEmpDesignation(rec: any): string {
     if (!rec) return '';
-    if (typeof rec.userId === 'object' && rec.userId?.department) return rec.userId.department;
-    const emp = this.employees.find(e => e._id === rec.userId);
-    return emp ? (emp.department || '') : '';
+    if (typeof rec.userId === 'object' && rec.userId?.designation) return rec.userId.designation;
+    const uId = typeof rec.userId === 'object' ? rec.userId?._id : rec.userId;
+    const emp = this.employees.find(e => e._id === uId);
+    return emp ? (emp.designation || 'Staff') : (rec.userId?.designation || 'Staff');
   }
 
   getEmpAvatar(rec: any): string {

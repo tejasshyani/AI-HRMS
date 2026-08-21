@@ -33,7 +33,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                 <span class="badge badge-present text-[10px]">Active</span>
               </div>
               <p class="text-xs text-slate-500 font-medium mt-0.5">
-                {{ authService.currentUser()?.designation || 'Staff Member' }} • {{ authService.currentUser()?.department || 'Finance' }}
+                {{ authService.currentUser()?.designation || 'Staff Member' }}
               </p>
               <div class="flex items-center gap-3 text-xs text-slate-400 mt-2">
                 <span><i class="fa-regular fa-envelope mr-1 text-slate-400"></i>{{ authService.currentUser()?.email }}</span>

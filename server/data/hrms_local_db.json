@@ -1,5 +1,38 @@
 {
-  "users": [],
+  "users": [
+    {
+      "_id": "6a86ba71e80d7d3d76d91cbc",
+      "employeeId": "1001",
+      "fullName": "Tejas Patel",
+      "username": "admin",
+      "email": "admin@gmail.com",
+      "passwordHash": "$2a$10$SdFNtJ0MFPtiKUP050ytqe1h1fnoMFa8svYyDX309kqc1ggQ2jUi6",
+      "role": "admin",
+      "department": "Executive Management",
+      "designation": "Head of HR & Admin",
+      "baseSalary": 0,
+      "isActive": true,
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Tejas%20Patel",
+      "createdAt": "2026-08-21T04:24:03.060Z",
+      "updatedAt": "2026-08-21T04:24:03.060Z"
+    },
+    {
+      "_id": "6a86bab9e80d7d3d76d91cca",
+      "employeeId": "1002",
+      "fullName": "Maulik Rupareliya",
+      "username": "maulik",
+      "email": "maulik@gmail.com",
+      "passwordHash": "$2a$10$SdFNtJ0MFPtiKUP050ytqe1h1fnoMFa8svYyDX309kqc1ggQ2jUi6",
+      "role": "employee",
+      "department": "Finance & Accounts",
+      "designation": "Tally Caller",
+      "baseSalary": 20000,
+      "isActive": true,
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Maulik%20Rupareliya",
+      "createdAt": "2026-08-21T04:24:03.060Z",
+      "updatedAt": "2026-08-21T04:24:03.060Z"
+    }
+  ],
   "attendance": [],
   "holidays": [],
   "payroll": [],

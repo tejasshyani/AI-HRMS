@@ -28,6 +28,8 @@ let memoryStore = {
   incentives: []
 };
 
+const bcrypt = require('bcryptjs');
+
 // Load saved data from file if present
 const loadFromFile = () => {
   try {
@@ -36,6 +38,44 @@ const loadFromFile = () => {
       if (content) {
         memoryStore = JSON.parse(content);
       }
+    }
+    if (!memoryStore.users || memoryStore.users.length === 0) {
+      const defaultHash = bcrypt.hashSync('Password@123', 10);
+      memoryStore.users = [
+        {
+          _id: '6a86ba71e80d7d3d76d91cbc',
+          employeeId: '1001',
+          fullName: 'Tejas Patel',
+          username: 'admin',
+          email: 'admin@gmail.com',
+          passwordHash: defaultHash,
+          role: 'admin',
+          department: 'Executive Management',
+          designation: 'Head of HR & Admin',
+          baseSalary: 0,
+          isActive: true,
+          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tejas%20Patel',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          _id: '6a86bab9e80d7d3d76d91cca',
+          employeeId: '1002',
+          fullName: 'Maulik Rupareliya',
+          username: 'maulik',
+          email: 'maulik@gmail.com',
+          passwordHash: defaultHash,
+          role: 'employee',
+          department: 'Finance & Accounts',
+          designation: 'Tally Caller',
+          baseSalary: 20000,
+          isActive: true,
+          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maulik%20Rupareliya',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      ];
+      saveToFile();
     }
   } catch (err) {
     console.error('[DataStore] Error loading local DB file:', err.message);

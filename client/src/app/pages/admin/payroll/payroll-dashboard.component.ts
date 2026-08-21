@@ -271,7 +271,6 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
               <tr>
                 <th class="py-3 px-3">Employee Name</th>
                 <th class="py-3 px-3">Base Salary</th>
-                <th class="py-3 px-3 text-center">Standard Days</th>
                 <th class="py-3 px-3 text-center">Payable Days</th>
                 <th class="py-3 px-3">Per-Day Rate</th>
                 <th class="py-3 px-3 text-blue-700 font-bold">Working Days Amount</th>
@@ -297,10 +296,6 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
 
                 <td class="py-3.5 px-3 font-bold font-mono text-slate-800">
                   ₹{{ item.salaryAmount?.toLocaleString() }}
-                </td>
-
-                <td class="py-3.5 px-3 text-center font-mono text-slate-600 font-bold">
-                  {{ item.totalWorkingDays || 30 }} Days
                 </td>
 
                 <td class="py-3.5 px-3 text-center font-mono font-bold text-blue-700">
@@ -342,7 +337,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
               </tr>
 
               <tr *ngIf="taxPayrollList.length === 0">
-                <td colspan="11" class="py-12 text-center text-slate-400">
+                <td colspan="10" class="py-12 text-center text-slate-400">
                   <i class="fa-solid fa-receipt text-2xl mb-2 text-slate-300"></i>
                   <p>No registered employees found. Add staff via <strong>Employee Directory</strong> to calculate payroll.</p>
                 </td>

@@ -328,9 +328,9 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                 </td>
 
                 <td class="py-2.5 px-2 text-right">
-                  <button (click)="openPayslip(item)" class="btn-action-view text-[11px] py-1 px-2">
+                  <button (click)="openPayslip(item)" class="btn-action-view text-[11px] py-1 px-2.5">
                     <i class="fa-solid fa-receipt text-[10px]"></i>
-                    <span>Slip</span>
+                    <span>Pay Slip</span>
                   </button>
                 </td>
 

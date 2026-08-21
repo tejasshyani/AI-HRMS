@@ -97,18 +97,32 @@ function calculateEmployeePayroll({
   const rawPayableDays = presentDays + (0.5 * halfDays) + paidHolidays + paidLeaves;
   const payableDays = Math.min(rawPayableDays, standardDays);
 
-  // Tally Loan Disbursements and Incentives for this month
+  // Tally Loan Disbursements for this month
   let totalLoanDisbursed = 0;
-  let totalIncentive = 0;
 
   incentiveRecords.forEach(inc => {
     const incMonth = Number(inc.month);
     const incYear = Number(inc.year);
     if (incMonth === Number(month) && incYear === Number(year)) {
       totalLoanDisbursed += (Number(inc.loanAmount) || 0);
-      totalIncentive += (Number(inc.incentiveAmount) || 0);
     }
   });
+
+  // Calculate incentive strictly on the TOTAL MONTHLY LOANS DISBURSED
+  let slabPercentage = 0;
+  if (totalLoanDisbursed > 5000000) {
+    slabPercentage = 0.50;
+  } else if (totalLoanDisbursed > 4000000) {
+    slabPercentage = 0.40;
+  } else if (totalLoanDisbursed > 3000000) {
+    slabPercentage = 0.30;
+  } else if (totalLoanDisbursed > 2000000) {
+    slabPercentage = 0.20;
+  } else if (totalLoanDisbursed > 1000000) {
+    slabPercentage = 0.10;
+  }
+
+  const totalIncentive = Math.round((totalLoanDisbursed * slabPercentage) / 100);
 
   // Flat 30-day calculation: Deduct ONLY for unpaid leaves
   const baseEarned = Math.max(0, Math.round(payableDays * perDayRate));

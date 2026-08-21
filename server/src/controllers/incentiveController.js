@@ -78,12 +78,24 @@ exports.getMyIncentives = async (req, res) => {
     if (month && month !== 'All') filter.month = Number(month);
     if (year && year !== 'All') filter.year = Number(year);
 
-    const records = await Store.findIncentives(filter);
-    const totalLoanAmount = records.reduce((sum, r) => sum + (Number(r.loanAmount) || 0), 0);
-    const totalIncentive = records.reduce((sum, r) => sum + (Number(r.incentiveAmount) || 0), 0);
+    const rawRecords = await Store.findIncentives(filter);
+    const totalLoanAmount = rawRecords.reduce((sum, r) => sum + (Number(r.loanAmount) || 0), 0);
 
     // Compute active tier based on total monthly loan volume
     const monthlySlab = Store.calculateIncentiveSlab(totalLoanAmount);
+    const totalIncentive = monthlySlab.incentiveAmount;
+
+    // Dynamically apply monthly tier rate to each individual loan record for display
+    const records = rawRecords.map(r => {
+      const loanAmt = Number(r.loanAmount) || 0;
+      const loanIncentive = Math.round((loanAmt * monthlySlab.slabPercentage) / 100);
+      const rObj = typeof r.toObject === 'function' ? r.toObject() : { ...r };
+      return {
+        ...rObj,
+        slabPercentage: monthlySlab.slabPercentage,
+        incentiveAmount: loanIncentive
+      };
+    });
 
     res.json({
       success: true,
@@ -116,14 +128,47 @@ exports.getAllIncentives = async (req, res) => {
       filter.year = Number(year);
     }
 
-    const records = await Store.findIncentives(filter);
-    const totalLoanAmount = records.reduce((sum, r) => sum + (Number(r.loanAmount) || 0), 0);
-    const totalIncentive = records.reduce((sum, r) => sum + (Number(r.incentiveAmount) || 0), 0);
+    const rawRecords = await Store.findIncentives(filter);
+    
+    // Group by employee and month/year to compute monthly total loan volume and slab
+    const userMonthTotals = {};
+    rawRecords.forEach(r => {
+      const uId = (r.userId?._id || r.userId)?.toString();
+      const m = r.month || (r.dateStr ? Number(r.dateStr.split('-')[1]) : 1);
+      const y = r.year || (r.dateStr ? Number(r.dateStr.split('-')[0]) : 2026);
+      const key = `${uId}_${m}_${y}`;
+      userMonthTotals[key] = (userMonthTotals[key] || 0) + (Number(r.loanAmount) || 0);
+    });
+
+    let grandTotalLoan = 0;
+    let grandTotalIncentive = 0;
+
+    const records = rawRecords.map(r => {
+      const uId = (r.userId?._id || r.userId)?.toString();
+      const m = r.month || (r.dateStr ? Number(r.dateStr.split('-')[1]) : 1);
+      const y = r.year || (r.dateStr ? Number(r.dateStr.split('-')[0]) : 2026);
+      const key = `${uId}_${m}_${y}`;
+      const monthlyTotal = userMonthTotals[key] || 0;
+      const slab = Store.calculateIncentiveSlab(monthlyTotal);
+      
+      const loanAmt = Number(r.loanAmount) || 0;
+      const loanIncentive = Math.round((loanAmt * slab.slabPercentage) / 100);
+      
+      grandTotalLoan += loanAmt;
+      grandTotalIncentive += loanIncentive;
+
+      const rObj = typeof r.toObject === 'function' ? r.toObject() : { ...r };
+      return {
+        ...rObj,
+        slabPercentage: slab.slabPercentage,
+        incentiveAmount: loanIncentive
+      };
+    });
 
     res.json({
       success: true,
-      totalLoanAmount,
-      totalIncentive,
+      totalLoanAmount: grandTotalLoan,
+      totalIncentive: grandTotalIncentive,
       count: records.length,
       records
     });

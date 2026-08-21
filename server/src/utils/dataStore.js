@@ -670,9 +670,21 @@ const Store = {
       month: Number(month),
       year: Number(year)
     };
-    const records = await this.findIncentives(filter);
-    const totalLoanAmount = records.reduce((sum, r) => sum + (Number(r.loanAmount) || 0), 0);
-    const totalIncentive = records.reduce((sum, r) => sum + (Number(r.incentiveAmount) || 0), 0);
+    const rawRecords = await this.findIncentives(filter);
+    const totalLoanAmount = rawRecords.reduce((sum, r) => sum + (Number(r.loanAmount) || 0), 0);
+    const slab = this.calculateIncentiveSlab(totalLoanAmount);
+    const totalIncentive = slab.incentiveAmount;
+
+    const records = rawRecords.map(r => {
+      const loanAmt = Number(r.loanAmount) || 0;
+      const loanIncentive = Math.round((loanAmt * slab.slabPercentage) / 100);
+      const rObj = typeof r.toObject === 'function' ? r.toObject() : { ...r };
+      return {
+        ...rObj,
+        slabPercentage: slab.slabPercentage,
+        incentiveAmount: loanIncentive
+      };
+    });
 
     return {
       records,

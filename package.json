@@ -1,0 +1,19 @@
+{
+  "name": "fingoal-hrms-fullstack",
+  "version": "1.0.0",
+  "description": "FinGoal HRMS - Enterprise Human Resource & Payroll Management System",
+  "scripts": {
+    "build": "cd client && npm install && npm run build -- --configuration production && cd ../server && npm install",
+    "start": "cd server && npm start"
+  },
+  "keywords": [
+    "hrms",
+    "payroll",
+    "attendance",
+    "angular",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "FinGoal Team",
+  "license": "ISC"
+}

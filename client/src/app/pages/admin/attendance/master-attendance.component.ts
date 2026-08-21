@@ -125,7 +125,6 @@ import { AttendanceRecord, User } from '../../../models';
                 <th class="py-3 px-3">Check Out</th>
                 <th class="py-3 px-3 text-center">Status</th>
                 <th class="py-3 px-3 text-center">Source</th>
-                <th class="py-3 px-3">Remarks</th>
                 <th class="py-3 px-3 text-right">Actions</th>
               </tr>
             </thead>
@@ -186,9 +185,6 @@ import { AttendanceRecord, User } from '../../../models';
                   </span>
                 </td>
 
-                <!-- Remarks -->
-                <td class="py-3.5 px-3 text-slate-500 truncate max-w-[160px]">{{ rec.remarks || 'Biometric punch' }}</td>
-
                 <!-- Actions -->
                 <td class="py-3.5 px-3 text-right">
                   <div class="flex items-center justify-end gap-1.5">
@@ -203,7 +199,7 @@ import { AttendanceRecord, User } from '../../../models';
 
               </tr>
               <tr *ngIf="records.length === 0">
-                <td colspan="9" class="py-8 text-center text-slate-400">
+                <td colspan="8" class="py-8 text-center text-slate-400">
                   <i class="fa-regular fa-calendar-xmark text-2xl mb-2 text-slate-300"></i>
                   <p>No matching attendance records found.</p>
                 </td>

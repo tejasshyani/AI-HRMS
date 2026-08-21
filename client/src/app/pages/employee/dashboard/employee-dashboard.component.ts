@@ -186,8 +186,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                     <th class="py-2.5">Date</th>
                     <th class="py-2.5">Check In</th>
                     <th class="py-2.5">Check Out</th>
-                    <th class="py-2.5">Status</th>
-                    <th class="py-2.5">Remarks</th>
+                    <th class="py-2.5 text-right">Status</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-medium">
@@ -195,15 +194,14 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                     <td class="py-3 font-mono font-bold text-slate-800">{{ rec.dateStr }}</td>
                     <td class="py-3 font-mono text-slate-700">{{ rec.checkInTime || '—' }}</td>
                     <td class="py-3 font-mono text-slate-700">{{ rec.checkOutTime || '—' }}</td>
-                    <td class="py-3">
+                    <td class="py-3 text-right">
                       <span class="badge text-[10px]" [ngClass]="rec.status === 'Present' ? 'badge-present' : (rec.status === 'Half-Day' ? 'badge-halfday' : 'badge-absent')">
                         {{ rec.status }}
                       </span>
                     </td>
-                    <td class="py-3 text-slate-500 truncate max-w-[180px]">{{ rec.remarks || 'Clock-in log' }}</td>
                   </tr>
                   <tr *ngIf="myAttendance.length === 0">
-                    <td colspan="5" class="py-8 text-center text-slate-400">
+                    <td colspan="4" class="py-8 text-center text-slate-400">
                       No attendance logged yet. Click <strong>"Clock In"</strong> above to log your first record!
                     </td>
                   </tr>

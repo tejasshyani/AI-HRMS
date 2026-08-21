@@ -203,7 +203,6 @@ import { AttendanceRecord } from '../../../models';
                   <th class="py-3 px-3">Check In</th>
                   <th class="py-3 px-3">Check Out</th>
                   <th class="py-3 px-3 text-center">Status</th>
-                  <th class="py-3 px-3">Remarks</th>
                   <th class="py-3 px-3 text-right">Actions</th>
                 </tr>
               </thead>
@@ -231,7 +230,6 @@ import { AttendanceRecord } from '../../../models';
                       {{ rec.status }}
                     </span>
                   </td>
-                  <td class="py-3.5 px-3 text-slate-500 truncate max-w-[150px]">{{ rec.remarks || 'Daily log' }}</td>
                   <td class="py-3.5 px-3 text-right">
                     <div class="flex items-center justify-end gap-1.5">
                       <button 
@@ -249,7 +247,7 @@ import { AttendanceRecord } from '../../../models';
                   </td>
                 </tr>
                 <tr *ngIf="records.length === 0">
-                  <td colspan="8" class="py-12 text-center text-slate-400">
+                  <td colspan="7" class="py-12 text-center text-slate-400">
                     <i class="fa-regular fa-calendar-xmark text-2xl mb-2 text-slate-300"></i>
                     <p>No attendance records logged yet. Fill out the form on the left to save your first record!</p>
                   </td>

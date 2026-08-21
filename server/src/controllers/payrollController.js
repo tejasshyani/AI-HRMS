@@ -149,6 +149,8 @@ exports.getPayrollAnalytics = async (req, res) => {
       computedRecords.push({
         _id: emp._id,
         employeeName: emp.fullName || 'Staff Member',
+        designation: emp.designation || 'Staff Member',
+        department: emp.department || 'Finance',
         role: emp.role || 'employee',
         avatar: emp.avatar || '',
         salaryAmount: calc.baseSalary,
@@ -158,6 +160,7 @@ exports.getPayrollAnalytics = async (req, res) => {
         paidHolidays: calc.paidHolidays,
         payableDays: calc.payableDays,
         perDayRate: calc.perDayRate,
+        workingDaysAmount: Math.round(calc.payableDays * calc.perDayRate),
         leaveDeduction: calc.leaveDeduction,
         employeeDeduction: calc.leaveDeduction,
         totalLoanDisbursed: calc.totalLoanDisbursed,

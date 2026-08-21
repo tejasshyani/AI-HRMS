@@ -265,70 +265,76 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
           </button>
         </div>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs">
+        <div class="table-responsive-wrapper">
+          <table class="table-modern text-xs">
             <thead>
-              <tr class="border-b border-slate-100 text-slate-400 text-left font-semibold">
-                <th class="py-3">Employee Name</th>
-                <th class="py-3">Base Salary</th>
-                <th class="py-3 text-center">Standard Days</th>
-                <th class="py-3 text-center">Payable Days</th>
-                <th class="py-3">Per-Day Rate</th>
-                <th class="py-3">Leave Deduction</th>
-                <th class="py-3">Loan Disbursed</th>
-                <th class="py-3 text-emerald-700 font-bold">Incentive</th>
-                <th class="py-3 font-bold text-slate-900">Net Payable</th>
-                <th class="py-3 text-right">Action</th>
+              <tr>
+                <th class="py-3 px-3">Employee Name</th>
+                <th class="py-3 px-3">Base Salary</th>
+                <th class="py-3 px-3 text-center">Standard Days</th>
+                <th class="py-3 px-3 text-center">Payable Days</th>
+                <th class="py-3 px-3">Per-Day Rate</th>
+                <th class="py-3 px-3 text-blue-700 font-bold">Working Days Amount</th>
+                <th class="py-3 px-3">Leave Deduction</th>
+                <th class="py-3 px-3">Loan Disbursed</th>
+                <th class="py-3 px-3 text-emerald-700 font-bold">Incentive</th>
+                <th class="py-3 px-3 font-bold text-slate-900">Net Payable</th>
+                <th class="py-3 px-3 text-right">Action</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
-              <tr *ngFor="let item of taxPayrollList" class="hover:bg-slate-50/70 transition-colors">
+              <tr *ngFor="let item of taxPayrollList" class="transition-colors">
                 
-                <td class="py-3.5 flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+                <td class="py-3.5 px-3 flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-2xs">
                     {{ getInitials(item.employeeName) }}
                   </div>
                   <div>
                     <div class="font-bold text-slate-900">{{ item.employeeName }}</div>
-                    <div class="text-[10px] text-slate-400">Staff Member</div>
+                    <div class="text-[10px] text-slate-400 font-medium">{{ item.designation || 'Staff Member' }}</div>
                   </div>
                 </td>
 
-                <td class="py-3.5 font-bold font-mono text-slate-800">
+                <td class="py-3.5 px-3 font-bold font-mono text-slate-800">
                   ₹{{ item.salaryAmount?.toLocaleString() }}
                 </td>
 
-                <td class="py-3.5 text-center font-mono text-slate-600 font-bold">
+                <td class="py-3.5 px-3 text-center font-mono text-slate-600 font-bold">
                   {{ item.totalWorkingDays || 30 }} Days
                 </td>
 
-                <td class="py-3.5 text-center font-mono font-bold text-blue-700">
+                <td class="py-3.5 px-3 text-center font-mono font-bold text-blue-700">
                   {{ item.payableDays }} Days
                 </td>
 
-                <td class="py-3.5 font-mono text-slate-600">
+                <td class="py-3.5 px-3 font-mono text-slate-600">
                   ₹{{ item.perDayRate?.toLocaleString() }}/d
                 </td>
 
-                <td class="py-3.5 font-mono font-bold" [ngClass]="item.leaveDeduction > 0 ? 'text-rose-600' : 'text-slate-400'">
+                <!-- Working Days Amount (Payable Days × Per-Day Rate) -->
+                <td class="py-3.5 px-3 font-bold font-mono text-blue-700">
+                  ₹{{ getWorkingDaysAmount(item).toLocaleString() }}
+                </td>
+
+                <td class="py-3.5 px-3 font-mono font-bold" [ngClass]="item.leaveDeduction > 0 ? 'text-rose-600' : 'text-slate-400'">
                   ₹{{ item.leaveDeduction?.toLocaleString() }}
                 </td>
 
-                <td class="py-3.5 font-mono text-slate-800">
+                <td class="py-3.5 px-3 font-mono text-slate-800">
                   ₹{{ (item.totalLoanDisbursed || 0)?.toLocaleString() }}
                 </td>
 
-                <td class="py-3.5 font-mono font-bold" [ngClass]="item.totalIncentive > 0 ? 'text-emerald-700' : 'text-slate-400'">
+                <td class="py-3.5 px-3 font-mono font-bold" [ngClass]="item.totalIncentive > 0 ? 'text-emerald-700' : 'text-slate-400'">
                   + ₹{{ (item.totalIncentive || 0)?.toLocaleString() }}
                 </td>
 
-                <td class="py-3.5 font-black font-mono text-emerald-700 text-sm">
+                <td class="py-3.5 px-3 font-black font-mono text-emerald-700 text-sm">
                   ₹{{ item.netPayable?.toLocaleString() }}
                 </td>
 
-                <td class="py-3.5 text-right">
-                  <button (click)="openPayslip(item)" class="btn btn-secondary btn-sm flex items-center gap-1.5 ml-auto text-blue-700 font-bold border-blue-200 hover:bg-blue-50">
-                    <i class="fa-solid fa-receipt"></i>
+                <td class="py-3.5 px-3 text-right">
+                  <button (click)="openPayslip(item)" class="btn-action-view">
+                    <i class="fa-solid fa-receipt text-xs"></i>
                     <span>Payslip</span>
                   </button>
                 </td>
@@ -336,7 +342,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
               </tr>
 
               <tr *ngIf="taxPayrollList.length === 0">
-                <td colspan="8" class="py-12 text-center text-slate-400">
+                <td colspan="11" class="py-12 text-center text-slate-400">
                   <i class="fa-solid fa-receipt text-2xl mb-2 text-slate-300"></i>
                   <p>No registered employees found. Add staff via <strong>Employee Directory</strong> to calculate payroll.</p>
                 </td>
@@ -422,6 +428,13 @@ export class PayrollDashboardComponent implements OnInit {
   triggerYearlyReport() {
     this.showDownloadMenu = false;
     this.toast.info('Generating yearly payroll audit report PDF...');
+  }
+
+  getWorkingDaysAmount(item: any): number {
+    if (item.workingDaysAmount != null) return item.workingDaysAmount;
+    const days = Number(item.payableDays) || 0;
+    const rate = Number(item.perDayRate) || (Number(item.salaryAmount) / 30);
+    return Math.round(days * rate);
   }
 
   getInitials(name: string): string {

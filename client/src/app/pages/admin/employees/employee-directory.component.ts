@@ -38,17 +38,14 @@ import { User } from '../../../models';
               class="form-control text-xs !py-1.5 !px-3 font-medium">
           </div>
 
-          <!-- Department Filter -->
+          <!-- Designation Filter -->
           <div class="w-48">
-            <select [(ngModel)]="selectedDept" (change)="filterEmployees()" class="form-select text-xs !py-1.5 !px-3 font-medium">
-              <option value="All">All Departments</option>
-              <option value="Executive Management">Executive Management</option>
-              <option value="UI/UX & Product Design">UI/UX & Product Design</option>
-              <option value="Software Engineering">Software Engineering</option>
-              <option value="Finance & Accounts">Finance & Accounts</option>
-              <option value="Risk & Compliance">Risk & Compliance</option>
-              <option value="Wealth Management">Wealth Management</option>
-              <option value="Operations">Operations</option>
+            <select [(ngModel)]="selectedDesignation" (change)="filterEmployees()" class="form-select text-xs !py-1.5 !px-3 font-medium">
+              <option value="All">All Designations</option>
+              <option value="Head of HR & Admin">Head of HR & Admin</option>
+              <option value="Tally Caller">Tally Caller</option>
+              <option value="Area Manager">Area Manager</option>
+              <option value="Branch Manager">Branch Manager</option>
             </select>
           </div>
 
@@ -75,7 +72,7 @@ import { User } from '../../../models';
             <thead>
               <tr class="border-b border-slate-100 text-slate-400 text-left font-semibold">
                 <th class="py-3">Employee</th>
-                <th class="py-3">Role & Dept</th>
+                <th class="py-3">Designation</th>
                 <th class="py-3">Contact</th>
                 <th class="py-3">Base Monthly Salary (₹)</th>
                 <th class="py-3 text-center">Status</th>
@@ -109,10 +106,9 @@ import { User } from '../../../models';
                   </div>
                 </td>
 
-                <!-- Role & Dept -->
+                <!-- Designation -->
                 <td class="py-3.5">
-                  <div class="font-semibold text-slate-800">{{ emp.designation || (emp.role === 'admin' ? 'Administrator' : 'Staff') }}</div>
-                  <div class="text-[10px] text-slate-400">{{ emp.department || 'General' }}</div>
+                  <div class="font-semibold text-slate-800">{{ emp.designation || (emp.role === 'admin' ? 'Head of HR & Admin' : 'Tally Caller') }}</div>
                 </td>
 
                 <!-- Contact -->
@@ -237,37 +233,27 @@ import { User } from '../../../models';
 
             <div class="grid grid-cols-2 gap-3">
               <div class="form-group mb-0">
-                <label class="form-label">Department</label>
-                <select [(ngModel)]="modalData.department" name="mDept" class="form-select text-xs">
-                  <option value="UI/UX & Product Design">UI/UX & Product Design</option>
-                  <option value="Software Engineering">Software Engineering</option>
-                  <option value="Finance & Accounts">Finance & Accounts</option>
-                  <option value="Risk & Compliance">Risk & Compliance</option>
-                  <option value="Wealth Management">Wealth Management</option>
-                  <option value="Executive Management">Executive Management</option>
-                  <option value="Operations">Operations</option>
+                <label class="form-label">Designation <span class="text-rose-500">*</span></label>
+                <select [(ngModel)]="modalData.designation" name="mDesig" class="form-select text-xs font-semibold">
+                  <option value="Head of HR & Admin">Head of HR & Admin</option>
+                  <option value="Tally Caller">Tally Caller</option>
+                  <option value="Area Manager">Area Manager</option>
+                  <option value="Branch Manager">Branch Manager</option>
                 </select>
               </div>
 
               <div class="form-group mb-0">
-                <label class="form-label">Designation</label>
-                <input type="text" [(ngModel)]="modalData.designation" name="mDesig" class="form-control text-xs">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-              <div class="form-group mb-0">
-                <label class="form-label">Base Monthly Salary (₹) <span class="text-rose-500">*</span></label>
-                <input type="number" [(ngModel)]="modalData.baseSalary" name="mSalary" required class="form-control text-xs font-mono">
-              </div>
-
-              <div class="form-group mb-0">
-                <label class="form-label">Role</label>
+                <label class="form-label">Account Role</label>
                 <select [(ngModel)]="modalData.role" name="mRole" class="form-select text-xs font-semibold">
                   <option value="employee">Employee</option>
                   <option value="admin">Admin</option>
                 </select>
               </div>
+            </div>
+
+            <div class="form-group mb-0">
+              <label class="form-label">Base Monthly Salary (₹) <span class="text-rose-500">*</span></label>
+              <input type="number" [(ngModel)]="modalData.baseSalary" name="mSalary" required class="form-control text-xs font-mono">
             </div>
 
             <!-- Modal Footer: Delete Button on Left + Actions on Right -->
@@ -303,7 +289,7 @@ export class EmployeeDirectoryComponent implements OnInit {
   employees: User[] = [];
   filteredEmployees: User[] = [];
   searchQuery = '';
-  selectedDept = 'All';
+  selectedDesignation = 'All';
   selectedRole = 'All';
 
   showModal = false;
@@ -340,13 +326,13 @@ export class EmployeeDirectoryComponent implements OnInit {
       list = list.filter(e => 
         e.fullName.toLowerCase().includes(q) || 
         e.email.toLowerCase().includes(q) || 
-        e.username.toLowerCase().includes(q) ||
+        (e.designation && e.designation.toLowerCase().includes(q)) ||
         (e.employeeId && e.employeeId.includes(q))
       );
     }
 
-    if (this.selectedDept !== 'All') {
-      list = list.filter(e => e.department === this.selectedDept);
+    if (this.selectedDesignation !== 'All') {
+      list = list.filter(e => e.designation === this.selectedDesignation);
     }
 
     if (this.selectedRole !== 'All') {
@@ -390,9 +376,8 @@ export class EmployeeDirectoryComponent implements OnInit {
       password: '',
       phone: '',
       role: 'employee',
-      department: 'Software Engineering',
-      designation: 'Financial Analyst',
-      baseSalary: 50000
+      designation: 'Tally Caller',
+      baseSalary: 20000
     };
     this.showModal = true;
   }
@@ -408,8 +393,7 @@ export class EmployeeDirectoryComponent implements OnInit {
       email: emp.email,
       phone: emp.phone || '',
       role: emp.role,
-      department: emp.department,
-      designation: emp.designation,
+      designation: emp.designation || 'Tally Caller',
       baseSalary: emp.baseSalary,
       password: ''
     };

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { AttendanceService } from '../../../services/attendance.service';
 import { EmployeeService } from '../../../services/employee.service';
 import { ToastService } from '../../../services/toast.service';
@@ -9,7 +10,7 @@ import { AttendanceRecord, User } from '../../../models';
 @Component({
   selector: 'app-master-attendance',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="p-6 pb-12 space-y-6 max-w-7xl mx-auto">
       
@@ -20,6 +21,10 @@ import { AttendanceRecord, User } from '../../../models';
           <p class="text-xs text-slate-500 mt-0.5">Filter, audit, add, and override daily employee punches and attendance logs</p>
         </div>
         <div class="flex items-center gap-2">
+          <a routerLink="/admin/calendar" class="btn btn-sm bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold border border-blue-200 flex items-center gap-1.5 shadow-xs">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Calendar View</span>
+          </a>
           <button (click)="loadRecords()" class="btn btn-secondary btn-sm flex items-center gap-1.5 shadow-xs">
             <i class="fa-solid fa-rotate-right"></i>
             <span>Refresh Grid</span>

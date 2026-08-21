@@ -9,6 +9,7 @@ import { AdminDashboardComponent } from './pages/admin/dashboard/admin-dashboard
 import { EmployeeDirectoryComponent } from './pages/admin/employees/employee-directory.component';
 import { HolidayManagerComponent } from './pages/admin/holidays/holiday-manager.component';
 import { MasterAttendanceComponent } from './pages/admin/attendance/master-attendance.component';
+import { AdminCalendarComponent } from './pages/admin/calendar/admin-calendar.component';
 import { PayrollDashboardComponent } from './pages/admin/payroll/payroll-dashboard.component';
 import { AdminIncentivesComponent } from './pages/admin/incentives/admin-incentives.component';
 import { EmployeeIncentivesComponent } from './pages/employee/incentives/employee-incentives.component';
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [adminGuard] },
   { path: 'admin/employees', component: EmployeeDirectoryComponent, canActivate: [adminGuard] },
   { path: 'admin/attendance', component: MasterAttendanceComponent, canActivate: [adminGuard] },
+  { path: 'admin/calendar', component: AdminCalendarComponent, canActivate: [adminGuard] },
   { path: 'admin/holidays', component: HolidayManagerComponent, canActivate: [adminGuard] },
   { path: 'admin/payroll', component: PayrollDashboardComponent, canActivate: [adminGuard] },
   { path: 'admin/incentives', component: AdminIncentivesComponent, canActivate: [adminGuard] },

@@ -47,6 +47,14 @@ import { AuthService } from '../../services/auth.service';
             </a>
 
             <a 
+              routerLink="/admin/calendar" 
+              routerLinkActive="bg-blue-50 text-blue-700 font-bold" 
+              class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+              <i class="fa-solid fa-calendar-days w-4 text-center text-sm"></i>
+              <span>Attendance Calendar</span>
+            </a>
+
+            <a 
               routerLink="/admin/holidays" 
               routerLinkActive="bg-blue-50 text-blue-700 font-bold" 
               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors">

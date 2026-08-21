@@ -42,74 +42,75 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
       <div class="card p-6 border border-slate-200 space-y-4">
         
         <div class="table-responsive-wrapper">
-          <table class="table-modern text-xs">
+          <table class="table-modern text-[11px] sm:text-xs">
             <thead>
-              <tr>
-                <th class="py-3 px-3">Pay Period</th>
-                <th class="py-3 px-3 text-center">Standard Days</th>
-                <th class="py-3 px-3 text-center">Payable Days</th>
-                <th class="py-3 px-3">Base Salary</th>
-                <th class="py-3 px-3">Per-Day Rate</th>
-                <th class="py-3 px-3">Leave Deduction</th>
-                <th class="py-3 px-3 text-emerald-700 font-bold">Incentive</th>
-                <th class="py-3 px-3 font-bold text-slate-900">Net Salary</th>
-                <th class="py-3 px-3 text-center">Status</th>
-                <th class="py-3 px-3 text-right">Actions</th>
+              <tr class="text-[11px] whitespace-nowrap">
+                <th class="py-2.5 px-2">Pay Period</th>
+                <th class="py-2.5 px-2 text-center">Standard Days</th>
+                <th class="py-2.5 px-2 text-center">Payable Days</th>
+                <th class="py-2.5 px-2">Base Salary</th>
+                <th class="py-2.5 px-2">Per-Day Rate</th>
+                <th class="py-2.5 px-2">Leave Deduction</th>
+                <th class="py-2.5 px-2 text-emerald-700 font-bold">Incentive</th>
+                <th class="py-2.5 px-2 font-bold text-slate-900">Net Salary</th>
+                <th class="py-2.5 px-2 text-center">Status</th>
+                <th class="py-2.5 px-2 text-right">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
               <tr *ngFor="let slip of payslips" class="transition-colors">
                 
-                <td class="py-4 px-3 font-bold text-slate-900 flex items-center gap-2.5">
-                  <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs shadow-2xs border border-blue-200">
+                <td class="py-3 px-2 font-bold text-slate-900 flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-[10px] shadow-2xs border border-blue-200 flex-shrink-0">
                     <i class="fa-solid fa-file-invoice-dollar"></i>
                   </div>
-                  <div>
-                    <div class="text-sm font-extrabold text-slate-900">{{ slip.monthName || getMonthName(selectedMonth) }}</div>
-                    <div class="text-[10px] text-slate-400 font-normal">Paid on {{ slip.paymentDateStr || (getMonthName(selectedMonth) + ' 30, ' + selectedYear) }}</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-extrabold text-slate-900 truncate">{{ slip.monthName || getMonthName(selectedMonth) }}</div>
+                    <div class="text-[9px] text-slate-400 font-normal truncate">Paid on {{ slip.paymentDateStr || (getMonthName(selectedMonth) + ' 30, ' + selectedYear) }}</div>
                   </div>
                 </td>
 
-                <td class="py-4 px-3 text-center font-mono text-slate-700 font-bold">{{ slip.totalWorkingDays || 30 }} Days</td>
+                <td class="py-3 px-2 text-center font-mono text-slate-700 font-bold">{{ slip.totalWorkingDays || 30 }}d</td>
                 
-                <td class="py-4 px-3 text-center font-mono font-black" [ngClass]="slip.payableDays > 0 ? 'text-emerald-700' : 'text-slate-500'">
-                  {{ slip.payableDays }} Days
+                <td class="py-3 px-2 text-center font-mono font-black" [ngClass]="slip.payableDays > 0 ? 'text-emerald-700' : 'text-slate-500'">
+                  {{ slip.payableDays }}d
                 </td>
                 
-                <td class="py-4 px-3 font-mono text-slate-800 font-bold">₹{{ slip.baseSalary?.toLocaleString() }}</td>
+                <td class="py-3 px-2 font-mono text-slate-800 font-bold">₹{{ slip.baseSalary?.toLocaleString() }}</td>
                 
-                <td class="py-4 px-3 font-mono text-slate-500">₹{{ slip.perDayRate?.toLocaleString() }}/d</td>
+                <td class="py-3 px-2 font-mono text-slate-500">₹{{ slip.perDayRate?.toLocaleString() }}/d</td>
                 
-                <td class="py-4 px-3 font-mono font-bold" [ngClass]="slip.leaveDeduction > 0 ? 'text-rose-600' : 'text-slate-400'">
+                <td class="py-3 px-2 font-mono font-bold" [ngClass]="slip.leaveDeduction > 0 ? 'text-rose-600' : 'text-slate-400'">
                   ₹{{ slip.leaveDeduction?.toLocaleString() }}
                 </td>
 
-                <td class="py-4 px-3 font-mono font-bold" [ngClass]="slip.totalIncentive > 0 ? 'text-emerald-700' : 'text-slate-400'">
+                <td class="py-3 px-2 font-mono font-bold" [ngClass]="slip.totalIncentive > 0 ? 'text-emerald-700' : 'text-slate-400'">
                   + ₹{{ (slip.totalIncentive || slip.allowances?.incentive || 0)?.toLocaleString() }}
                 </td>
                 
-                <td class="py-4 px-3 font-mono font-black text-sm text-emerald-700">₹{{ slip.netSalary?.toLocaleString() }}</td>
+                <td class="py-3 px-2 font-mono font-black text-sm text-emerald-700">₹{{ slip.netSalary?.toLocaleString() }}</td>
                 
-                <td class="py-4 px-3 text-center">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-[10px]"
+                <td class="py-3 px-2 text-center">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-[9px] whitespace-nowrap"
                     [ngClass]="slip.netSalary > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-600'">
                     <span class="w-1.5 h-1.5 rounded-full" [ngClass]="slip.netSalary > 0 ? 'bg-emerald-500' : 'bg-slate-400'"></span>
                     {{ slip.status || (slip.netSalary > 0 ? 'Processed' : 'Calculated') }}
                   </span>
                 </td>
                 
-                <td class="py-4 px-3 text-right">
+                <td class="py-3 px-2 text-right">
                   <button 
                     (click)="openPayslip(slip.month || selectedMonth, slip.year || selectedYear)" 
-                    class="btn-action-view">
-                    <i class="fa-solid fa-eye text-xs"></i> View Slip
+                    class="btn-action-view whitespace-nowrap text-[11px] py-1 px-2.5">
+                    <i class="fa-solid fa-eye text-xs"></i>
+                    <span>View Slip</span>
                   </button>
                 </td>
 
               </tr>
 
               <tr *ngIf="payslips.length === 0">
-                <td colspan="9" class="py-12 text-center text-slate-400">
+                <td colspan="10" class="py-12 text-center text-slate-400">
                   <i class="fa-regular fa-file-lines text-2xl mb-2 text-slate-300"></i>
                   <p>No payroll records found for {{ getMonthName(selectedMonth) }} {{ selectedYear }}.</p>
                 </td>

@@ -173,67 +173,67 @@ interface CalendarDay {
       </div>
 
       <!-- MONTHLY CALENDAR GRID -->
-      <div *ngIf="viewMode === 'monthly'" class="card p-6 border border-slate-200">
-        
-        <!-- Day Headers (Mon - Sat, Sun) -->
-        <div class="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-bold uppercase tracking-wider text-slate-400">
-          <div class="py-2">Mon</div>
-          <div class="py-2">Tue</div>
-          <div class="py-2">Wed</div>
-          <div class="py-2">Thu</div>
-          <div class="py-2">Fri</div>
-          <div class="py-2 text-blue-600">Sat</div>
-          <div class="py-2 text-slate-400 bg-slate-50/70 rounded-t-lg">Sun (Off)</div>
-        </div>
+      <div *ngIf="viewMode === 'monthly'" class="card p-4 sm:p-6 border border-slate-200 overflow-x-auto">
+        <div class="min-w-[640px]">
+          <!-- Day Headers (Mon - Sat, Sun) -->
+          <div class="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-bold uppercase tracking-wider text-slate-400">
+            <div class="py-2">Mon</div>
+            <div class="py-2">Tue</div>
+            <div class="py-2">Wed</div>
+            <div class="py-2">Thu</div>
+            <div class="py-2">Fri</div>
+            <div class="py-2 text-blue-600">Sat</div>
+            <div class="py-2 text-slate-400 bg-slate-50/70 rounded-t-lg">Sun (Off)</div>
+          </div>
 
-        <!-- Days Grid -->
-        <div class="grid grid-cols-7 gap-2">
-          <div 
-            *ngFor="let day of calendarDays" 
-            (click)="selectDay(day)"
-            class="min-h-[105px] p-2.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between hover:shadow-md hover:scale-[1.01]"
-            [ngClass]="getDayClasses(day)">
-            
-            <div class="flex justify-between items-start">
-              <span class="font-extrabold text-xs font-mono" [ngClass]="day.isCurrentMonth ? 'text-slate-800' : 'text-slate-300'">
-                {{ day.dayNumber }}
-              </span>
-              <span 
-                *ngIf="day.isCurrentMonth && day.status !== 'Upcoming' && day.status !== 'Not Logged'"
-                class="text-[9px] font-bold px-1.5 py-0.5 rounded-md"
-                [ngClass]="getStatusPillClasses(day)">
-                {{ getStatusLabel(day) }}
-              </span>
+          <!-- Days Grid -->
+          <div class="grid grid-cols-7 gap-2">
+            <div 
+              *ngFor="let day of calendarDays" 
+              (click)="selectDay(day)"
+              class="min-h-[105px] p-2.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between hover:shadow-md hover:scale-[1.01]"
+              [ngClass]="getDayClasses(day)">
+              
+              <div class="flex justify-between items-start">
+                <span class="font-extrabold text-xs font-mono" [ngClass]="day.isCurrentMonth ? 'text-slate-800' : 'text-slate-300'">
+                  {{ day.dayNumber }}
+                </span>
+                <span 
+                  *ngIf="day.isCurrentMonth && day.status !== 'Upcoming' && day.status !== 'Not Logged'"
+                  class="text-[9px] font-bold px-1.5 py-0.5 rounded-md"
+                  [ngClass]="getStatusPillClasses(day)">
+                  {{ getStatusLabel(day) }}
+                </span>
+              </div>
+
+              <!-- Day Info / Holiday or Times -->
+              <div class="text-[10px] space-y-0.5 mt-1" *ngIf="day.isCurrentMonth">
+                <div *ngIf="day.status === 'Holiday'" class="font-bold text-blue-800 truncate">
+                  🎉 {{ day.holidayTitle }}
+                </div>
+                <div *ngIf="day.status === 'Present'" class="font-mono text-emerald-700 font-semibold">
+                  <i class="fa-regular fa-clock text-[9px] mr-0.5"></i>{{ day.checkInTime || '10:00 AM' }}
+                </div>
+                <div *ngIf="day.status === 'Half-Day'" class="font-mono text-amber-700 font-semibold">
+                  <i class="fa-regular fa-clock text-[9px] mr-0.5"></i>{{ day.checkInTime || '02:00 PM' }}
+                </div>
+                <div *ngIf="day.status === 'Sunday'" class="text-slate-400 italic">
+                  Weekly Off
+                </div>
+                <div *ngIf="day.status === 'Leave' || day.status === 'Absent'" class="text-rose-600 font-semibold truncate">
+                  {{ day.remarks || 'Absent' }}
+                </div>
+                <div *ngIf="day.status === 'Not Logged'" class="text-slate-300 italic text-[9px]">
+                  No Log
+                </div>
+                <div *ngIf="day.status === 'Upcoming'" class="text-slate-300 italic text-[9px]">
+                  Upcoming
+                </div>
+              </div>
+
             </div>
-
-            <!-- Day Info / Holiday or Times -->
-            <div class="text-[10px] space-y-0.5 mt-1" *ngIf="day.isCurrentMonth">
-              <div *ngIf="day.status === 'Holiday'" class="font-bold text-blue-800 truncate">
-                🎉 {{ day.holidayTitle }}
-              </div>
-              <div *ngIf="day.status === 'Present'" class="font-mono text-emerald-700 font-semibold">
-                <i class="fa-regular fa-clock text-[9px] mr-0.5"></i>{{ day.checkInTime || '10:00 AM' }}
-              </div>
-              <div *ngIf="day.status === 'Half-Day'" class="font-mono text-amber-700 font-semibold">
-                <i class="fa-regular fa-clock text-[9px] mr-0.5"></i>{{ day.checkInTime || '02:00 PM' }}
-              </div>
-              <div *ngIf="day.status === 'Sunday'" class="text-slate-400 italic">
-                Weekly Off
-              </div>
-              <div *ngIf="day.status === 'Leave' || day.status === 'Absent'" class="text-rose-600 font-semibold truncate">
-                {{ day.remarks || 'Absent' }}
-              </div>
-              <div *ngIf="day.status === 'Not Logged'" class="text-slate-300 italic text-[9px]">
-                No Log
-              </div>
-              <div *ngIf="day.status === 'Upcoming'" class="text-slate-300 italic text-[9px]">
-                Upcoming
-              </div>
-            </div>
-
           </div>
         </div>
-
       </div>
 
       <!-- WEEKLY VIEW -->

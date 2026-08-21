@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
+import { UiService } from '../../services/ui.service';
 import { AppLogoComponent } from '../logo/app-logo.component';
 
 @Component({
@@ -10,13 +11,21 @@ import { AppLogoComponent } from '../logo/app-logo.component';
   standalone: true,
   imports: [CommonModule, RouterModule, AppLogoComponent],
   template: `
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 px-6 py-2.5 flex items-center justify-between shadow-xs">
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 px-3 sm:px-6 py-2.5 flex items-center justify-between shadow-xs">
       
-      <!-- Brand & Left section -->
-      <div class="flex items-center gap-4">
-        <a routerLink="/" class="flex items-center gap-3 text-decoration-none">
+      <!-- Brand & Left section with Hamburger Toggle -->
+      <div class="flex items-center gap-2 sm:gap-4">
+        <!-- Mobile Menu Toggle (3-line bar) -->
+        <button 
+          (click)="uiService.toggleMobileSidebar()" 
+          title="Open Navigation Menu"
+          class="md:hidden w-9 h-9 rounded-xl hover:bg-slate-100 text-slate-700 flex items-center justify-center text-base focus:outline-hidden transition-colors">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <a routerLink="/" class="flex items-center gap-2 sm:gap-3 text-decoration-none">
           <app-logo size="sm"></app-logo>
-          <span class="text-xs px-2 py-0.5 rounded font-bold uppercase tracking-wider hidden sm:inline-block" 
+          <span class="text-[11px] px-2 py-0.5 rounded font-bold uppercase tracking-wider hidden sm:inline-block" 
             [ngClass]="authService.isAdmin() ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'">
             {{ authService.isAdmin() ? 'Admin Portal' : 'Employee Portal' }}
           </span>
@@ -45,13 +54,13 @@ import { AppLogoComponent } from '../logo/app-logo.component';
       </div>
 
       <!-- Right Section: Profile & Logout -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 sm:gap-3">
         
-        <div class="flex items-center gap-2.5 pl-2 border-l border-slate-200">
+        <div class="flex items-center gap-2 sm:gap-2.5 pl-2 border-l border-slate-200">
           <img 
             [src]="authService.currentUser()?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + (authService.currentUser()?.fullName || 'User')" 
             alt="Avatar" 
-            class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 object-cover">
+            class="w-8 sm:w-9 h-8 sm:h-9 rounded-full bg-slate-100 border border-slate-200 object-cover">
           <div class="hidden lg:block text-left">
             <div class="font-bold text-xs text-slate-800 leading-tight">{{ authService.currentUser()?.fullName || 'User' }}</div>
             <div class="text-[10px] text-slate-400 font-medium">{{ authService.currentUser()?.designation || authService.currentUser()?.role }}</div>
@@ -75,6 +84,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   constructor(
     public authService: AuthService,
+    public uiService: UiService,
     private router: Router,
     private toast: ToastService
   ) {}

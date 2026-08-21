@@ -36,7 +36,15 @@ const loadFromFile = () => {
     if (fs.existsSync(dataFilePath)) {
       const content = fs.readFileSync(dataFilePath, 'utf8');
       if (content) {
-        memoryStore = JSON.parse(content);
+        const loaded = JSON.parse(content);
+        memoryStore = {
+          users: loaded.users || [],
+          attendance: loaded.attendance || [],
+          holidays: loaded.holidays || [],
+          payroll: loaded.payroll || [],
+          leaveRequests: loaded.leaveRequests || [],
+          incentives: loaded.incentives || []
+        };
       }
     }
     if (!memoryStore.users || memoryStore.users.length === 0) {
@@ -552,7 +560,7 @@ const Store = {
     if (!isUsingMemory()) {
       return await Incentive.find(filter).populate('userId', 'fullName email department designation avatar').sort({ dateStr: -1, createdAt: -1 });
     }
-    return memoryStore.incentives
+    return (memoryStore.incentives || [])
       .filter(inc => {
         if (filter.userId && inc.userId.toString() !== filter.userId.toString()) return false;
         if (filter.month && Number(inc.month) !== Number(filter.month)) return false;

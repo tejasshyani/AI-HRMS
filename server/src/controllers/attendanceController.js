@@ -370,3 +370,36 @@ exports.deleteAttendance = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// Bulk Delete Attendance Records (Admin or Employee for own records)
+exports.bulkDeleteAttendance = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ success: false, message: 'No attendance record IDs provided.' });
+    }
+
+    const existingRecords = await Store.findAttendance();
+    let deletedCount = 0;
+
+    for (const id of ids) {
+      const rec = existingRecords.find(r => r._id.toString() === id.toString());
+      if (rec) {
+        const recordUserId = (rec.userId?._id || rec.userId)?.toString();
+        const reqUserId = req.user._id.toString();
+        if (req.user.role === 'admin' || recordUserId === reqUserId) {
+          await Store.deleteAttendanceById(id);
+          deletedCount++;
+        }
+      }
+    }
+
+    res.json({
+      success: true,
+      message: `Successfully deleted ${deletedCount} attendance record(s).`,
+      count: deletedCount
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

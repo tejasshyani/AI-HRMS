@@ -21,5 +21,6 @@ router.put('/override/:id', adminOnly, attendanceController.adminOverride);
 
 // Delete Attendance Record
 router.delete('/:id', attendanceController.deleteAttendance);
+router.post('/bulk-delete', attendanceController.bulkDeleteAttendance);
 
 module.exports = router;

@@ -69,4 +69,8 @@ export class AttendanceService {
   deleteAttendance(id: string): Observable<{ success: boolean; message: string }> {
     return this.http.delete<{ success: boolean; message: string }>(`${this.apiUrl}/${id}`);
   }
+
+  bulkDeleteAttendance(ids: string[]): Observable<{ success: boolean; message: string; count: number }> {
+    return this.http.post<{ success: boolean; message: string; count: number }>(`${this.apiUrl}/bulk-delete`, { ids });
+  }
 }

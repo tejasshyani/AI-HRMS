@@ -75,20 +75,44 @@ import { AttendanceRecord, User } from '../../../models';
 
       <!-- Attendance Grid -->
       <div class="card p-6 border border-slate-200">
-        <div class="flex justify-between items-center mb-4">
-          <span class="text-xs text-slate-500 font-semibold">
-            Found <strong class="text-slate-800">{{ records.length }}</strong> Attendance Logs
-          </span>
-          <button (click)="openAddModal()" class="btn btn-primary btn-sm flex items-center gap-1.5 shadow-xs">
-            <i class="fa-solid fa-plus"></i>
-            <span>Add Attendance</span>
-          </button>
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-slate-500 font-semibold">
+              Found <strong class="text-slate-800">{{ records.length }}</strong> Attendance Logs
+            </span>
+            <span *ngIf="selectedIds.size > 0" class="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200 animate-fade">
+              <i class="fa-solid fa-check-double mr-1"></i> {{ selectedIds.size }} selected
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- Bulk Delete Action Button -->
+            <button 
+              *ngIf="selectedIds.size > 0" 
+              (click)="bulkDeleteSelected()" 
+              class="btn btn-sm bg-rose-600 hover:bg-rose-700 text-white font-bold flex items-center gap-1.5 shadow-sm transition-all animate-fade">
+              <i class="fa-solid fa-trash-can"></i>
+              <span>Delete Selected ({{ selectedIds.size }})</span>
+            </button>
+
+            <button (click)="openAddModal()" class="btn btn-primary btn-sm flex items-center gap-1.5 shadow-xs">
+              <i class="fa-solid fa-plus"></i>
+              <span>Add Attendance</span>
+            </button>
+          </div>
         </div>
 
         <div class="overflow-x-auto">
           <table class="w-full text-xs">
             <thead>
               <tr class="border-b border-slate-100 text-slate-400 text-left font-semibold">
+                <th class="py-3 px-3 w-8">
+                  <input 
+                    type="checkbox" 
+                    [checked]="isAllSelected()" 
+                    (change)="toggleSelectAll()" 
+                    class="rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
+                </th>
                 <th class="py-3 px-3">Employee</th>
                 <th class="py-3 px-3">Date</th>
                 <th class="py-3 px-3">Check In</th>
@@ -100,8 +124,17 @@ import { AttendanceRecord, User } from '../../../models';
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
-              <tr *ngFor="let rec of records" class="hover:bg-slate-50/70 transition-colors">
+              <tr *ngFor="let rec of records" class="hover:bg-slate-50/70 transition-colors" [ngClass]="{'bg-blue-50/40': selectedIds.has(rec._id)}">
                 
+                <!-- Checkbox -->
+                <td class="py-3.5 px-3 w-8">
+                  <input 
+                    type="checkbox" 
+                    [checked]="selectedIds.has(rec._id)" 
+                    (change)="toggleSelect(rec._id)" 
+                    class="rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
+                </td>
+
                 <!-- Employee -->
                 <td class="py-3.5 px-3 flex items-center gap-2.5">
                   <img [src]="getEmpAvatar(rec)" class="w-7 h-7 rounded-full bg-slate-100 border" alt="">
@@ -356,6 +389,8 @@ export class MasterAttendanceComponent implements OnInit {
   selectedYear = new Date().getFullYear();
   selectedStatus = 'All';
 
+  selectedIds = new Set<string>();
+
   showOverrideModal = false;
   overrideData: any = {};
 
@@ -392,6 +427,49 @@ export class MasterAttendanceComponent implements OnInit {
       }
     });
     this.loadRecords();
+  }
+
+  toggleSelect(id?: string) {
+    if (!id) return;
+    if (this.selectedIds.has(id)) {
+      this.selectedIds.delete(id);
+    } else {
+      this.selectedIds.add(id);
+    }
+  }
+
+  isAllSelected(): boolean {
+    return this.records.length > 0 && this.records.every(r => r._id && this.selectedIds.has(r._id));
+  }
+
+  toggleSelectAll() {
+    if (this.isAllSelected()) {
+      this.selectedIds.clear();
+    } else {
+      this.records.forEach(r => {
+        if (r._id) this.selectedIds.add(r._id);
+      });
+    }
+  }
+
+  bulkDeleteSelected() {
+    if (this.selectedIds.size === 0) return;
+    const count = this.selectedIds.size;
+    if (!confirm(`Are you sure you want to delete ${count} selected attendance record(s)? This will permanently remove them.`)) {
+      return;
+    }
+
+    const ids = Array.from(this.selectedIds);
+    this.attendanceService.bulkDeleteAttendance(ids).subscribe({
+      next: (res) => {
+        this.toast.success(res.message || `Deleted ${res.count || count} attendance records successfully.`);
+        this.selectedIds.clear();
+        this.loadRecords();
+      },
+      error: (err) => {
+        this.toast.error(err.error?.message || 'Failed to delete selected attendance records.');
+      }
+    });
   }
 
   getTodayDateStr(): string {

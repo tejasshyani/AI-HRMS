@@ -172,6 +172,14 @@ import { AttendanceRecord } from '../../../models';
               <p class="text-xs text-slate-400">Showing latest attendance records and check-in times ({{ records.length }} total)</p>
             </div>
             <div class="flex items-center gap-2">
+              <button 
+                *ngIf="selectedIds.size > 0" 
+                (click)="bulkDeleteSelected()" 
+                class="btn btn-sm bg-rose-600 hover:bg-rose-700 text-white font-bold flex items-center gap-1.5 shadow-sm transition-all animate-fade">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>Delete Selected ({{ selectedIds.size }})</span>
+              </button>
+
               <button (click)="loadMyAttendance()" class="btn btn-secondary btn-sm flex items-center gap-1.5">
                 <i class="fa-solid fa-rotate-right"></i>
                 <span>Refresh</span>
@@ -183,6 +191,13 @@ import { AttendanceRecord } from '../../../models';
             <table class="w-full text-xs">
               <thead>
                 <tr class="border-b border-slate-100 text-slate-400 text-left font-semibold">
+                  <th class="py-2.5 px-2 w-8">
+                    <input 
+                      type="checkbox" 
+                      [checked]="isAllSelected()" 
+                      (change)="toggleSelectAll()" 
+                      class="rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
+                  </th>
                   <th class="py-2.5">Date</th>
                   <th class="py-2.5">Day</th>
                   <th class="py-2.5">Check In</th>
@@ -193,7 +208,14 @@ import { AttendanceRecord } from '../../../models';
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 font-medium">
-                <tr *ngFor="let rec of records" class="hover:bg-slate-50/70 transition-colors">
+                <tr *ngFor="let rec of records" class="hover:bg-slate-50/70 transition-colors" [ngClass]="{'bg-blue-50/40': selectedIds.has(rec._id)}">
+                  <td class="py-3 px-2 w-8">
+                    <input 
+                      type="checkbox" 
+                      [checked]="selectedIds.has(rec._id)" 
+                      (change)="toggleSelect(rec._id)" 
+                      class="rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
+                  </td>
                   <td class="py-3 font-mono font-bold text-slate-800">{{ rec.dateStr }}</td>
                   <td class="py-3 text-slate-500">{{ getWeekday(rec.dateStr) }}</td>
                   <td class="py-3 text-slate-700 font-mono">{{ rec.checkInTime || '—' }}</td>
@@ -245,6 +267,8 @@ import { AttendanceRecord } from '../../../models';
 export class AttendanceLogComponent implements OnInit {
   records: AttendanceRecord[] = [];
   attendanceMode: 'single' | 'range' = 'single';
+  selectedIds = new Set<string>();
+
   formData: any = {
     dateStr: this.getTodayDateStr(),
     startDate: this.getTodayDateStr(),
@@ -266,6 +290,49 @@ export class AttendanceLogComponent implements OnInit {
 
   ngOnInit() {
     this.loadMyAttendance();
+  }
+
+  toggleSelect(id?: string) {
+    if (!id) return;
+    if (this.selectedIds.has(id)) {
+      this.selectedIds.delete(id);
+    } else {
+      this.selectedIds.add(id);
+    }
+  }
+
+  isAllSelected(): boolean {
+    return this.records.length > 0 && this.records.every(r => r._id && this.selectedIds.has(r._id));
+  }
+
+  toggleSelectAll() {
+    if (this.isAllSelected()) {
+      this.selectedIds.clear();
+    } else {
+      this.records.forEach(r => {
+        if (r._id) this.selectedIds.add(r._id);
+      });
+    }
+  }
+
+  bulkDeleteSelected() {
+    if (this.selectedIds.size === 0) return;
+    const count = this.selectedIds.size;
+    if (!confirm(`Are you sure you want to delete ${count} selected attendance record(s)?`)) {
+      return;
+    }
+
+    const ids = Array.from(this.selectedIds);
+    this.attendanceService.bulkDeleteAttendance(ids).subscribe({
+      next: (res) => {
+        this.toast.success(res.message || `Deleted ${res.count || count} attendance records successfully.`);
+        this.selectedIds.clear();
+        this.loadMyAttendance();
+      },
+      error: (err) => {
+        this.toast.error(err.error?.message || 'Failed to delete selected attendance records.');
+      }
+    });
   }
 
   getTodayDateStr(): string {

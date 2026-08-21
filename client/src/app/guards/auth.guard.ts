@@ -41,3 +41,43 @@ export const employeeGuard: CanActivateFn = (route, state) => {
   router.navigate(['/login']);
   return false;
 };
+
+/**
+ * Prevents logged-in users from accessing Login/Register screens
+ * and sends them directly to their portal dashboard.
+ */
+export const publicGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (authService.isLoggedIn()) {
+    if (authService.isAdmin()) {
+      router.navigate(['/admin/dashboard']);
+    } else {
+      router.navigate(['/employee/dashboard']);
+    }
+    return false;
+  }
+
+  return true;
+};
+
+/**
+ * Dynamically resolves root '/' or wildcard routes to the user's dashboard if logged in,
+ * or login page if unauthenticated.
+ */
+export const rootRedirectGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (authService.isLoggedIn()) {
+    if (authService.isAdmin()) {
+      router.navigate(['/admin/dashboard']);
+    } else {
+      router.navigate(['/employee/dashboard']);
+    }
+  } else {
+    router.navigate(['/login']);
+  }
+  return false;
+};

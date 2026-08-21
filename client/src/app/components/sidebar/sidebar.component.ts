@@ -17,13 +17,13 @@ import { AppLogoComponent } from '../logo/app-logo.component';
         
         <!-- Mobile Drawer Header (Visible only on mobile drawer) -->
         <div class="md:hidden flex items-center justify-between pb-3 border-b border-slate-100">
-          <div class="flex items-center gap-2">
+          <a [routerLink]="authService.isAdmin() ? '/admin/dashboard' : '/employee/dashboard'" (click)="uiService.closeMobileSidebar()" class="flex items-center gap-2 text-decoration-none">
             <app-logo size="sm"></app-logo>
             <span class="text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider" 
               [ngClass]="authService.isAdmin() ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'">
               {{ authService.isAdmin() ? 'Admin' : 'Employee' }}
             </span>
-          </div>
+          </a>
           <button 
             (click)="uiService.closeMobileSidebar()" 
             class="w-8 h-8 rounded-lg hover:bg-slate-100 text-slate-500 flex items-center justify-center transition-colors">

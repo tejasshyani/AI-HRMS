@@ -13,12 +13,12 @@ import { AdminCalendarComponent } from './pages/admin/calendar/admin-calendar.co
 import { PayrollDashboardComponent } from './pages/admin/payroll/payroll-dashboard.component';
 import { AdminIncentivesComponent } from './pages/admin/incentives/admin-incentives.component';
 import { EmployeeIncentivesComponent } from './pages/employee/incentives/employee-incentives.component';
-import { authGuard, adminGuard, employeeGuard } from './guards/auth.guard';
+import { authGuard, adminGuard, employeeGuard, publicGuard, rootRedirectGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  // Public Auth Routes
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  // Public Auth Routes (Redirects to dashboard if already logged in)
+  { path: 'login', component: LoginComponent, canActivate: [publicGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [publicGuard] },
 
   // Admin Portal Routes
   { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [adminGuard] },
@@ -36,7 +36,7 @@ export const routes: Routes = [
   { path: 'employee/incentives', component: EmployeeIncentivesComponent, canActivate: [employeeGuard] },
   { path: 'employee/payslips', component: MyPayslipsComponent, canActivate: [employeeGuard] },
 
-  // Default redirect to login
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }
+  // Smart Root Redirect based on user authentication and role
+  { path: '', canActivate: [rootRedirectGuard], children: [] },
+  { path: '**', canActivate: [rootRedirectGuard], children: [] }
 ];

@@ -23,7 +23,7 @@ import { AppLogoComponent } from '../logo/app-logo.component';
           <i class="fa-solid fa-bars"></i>
         </button>
 
-        <a routerLink="/" class="flex items-center gap-2 sm:gap-3 text-decoration-none">
+        <a [routerLink]="authService.isAdmin() ? '/admin/dashboard' : '/employee/dashboard'" class="flex items-center gap-2 sm:gap-3 text-decoration-none cursor-pointer">
           <app-logo size="sm"></app-logo>
           <span class="text-[11px] px-2 py-0.5 rounded font-bold uppercase tracking-wider hidden sm:inline-block" 
             [ngClass]="authService.isAdmin() ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'">

@@ -46,15 +46,9 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
             </div>
           </div>
 
-          <!-- Right (Desktop): Shift Badge + Compact Action Buttons -->
+          <!-- Right (Desktop): Compact Action Buttons + Shift Badge at the end -->
           <div class="hidden md:flex items-center gap-2.5">
-            <!-- Punctuality / Shift Pill -->
-            <div class="flex items-center gap-2 bg-white/90 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 shadow-2xs">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Shift: 10:00 AM – 06:00 PM</span>
-            </div>
-
-            <!-- Desktop Action Buttons (Smaller, Beside Shift) -->
+            <!-- Desktop Action Buttons -->
             <button 
               (click)="onClockIn()" 
               [disabled]="todayCheckedIn" 
@@ -79,6 +73,12 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
               <i class="fa-solid fa-receipt text-sm"></i>
               <span>View Payslip</span>
             </button>
+
+            <!-- Punctuality / Shift Pill (at the end) -->
+            <div class="flex items-center gap-2 bg-white/90 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 shadow-2xs">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Shift: 10:00 AM – 06:00 PM</span>
+            </div>
           </div>
 
         </div>

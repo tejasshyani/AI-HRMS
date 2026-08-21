@@ -33,7 +33,8 @@ exports.register = async (req, res) => {
 
     const cleanEmail = email.toLowerCase().trim();
     const cleanUsername = (username || cleanEmail.split('@')[0]).toLowerCase().trim();
-    const cleanRole = role === 'admin' ? 'admin' : 'employee';
+    // Public self-registration is strictly employee-only for enterprise security
+    const cleanRole = 'employee';
 
     // Check existing
     const existing = await Store.findUserByEmailOrUsername(cleanEmail);

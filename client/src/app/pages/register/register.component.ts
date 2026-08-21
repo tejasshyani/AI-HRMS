@@ -26,8 +26,8 @@ import { AppLogoComponent } from '../../components/logo/app-logo.component';
         <div class="bg-white py-8 px-6 sm:px-10 shadow-xl rounded-2xl border border-slate-100">
           
           <div class="text-center mb-6">
-            <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">Create your FinGoal account</h2>
-            <p class="text-xs text-slate-500 mt-1">Register an Admin profile or an Employee profile</p>
+            <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">Create your Employee account</h2>
+            <p class="text-xs text-slate-500 mt-1">Sign up for your personal employee portal & attendance dashboard</p>
           </div>
 
           <form (ngSubmit)="onRegister()" class="space-y-4">
@@ -40,7 +40,7 @@ import { AppLogoComponent } from '../../components/logo/app-logo.component';
                   [(ngModel)]="formData.fullName" 
                   name="fullName" 
                   required 
-                  placeholder="e.g. Tejas Shah" 
+                  placeholder="e.g. Rahul Sharma" 
                   class="form-control text-sm">
               </div>
 
@@ -51,7 +51,7 @@ import { AppLogoComponent } from '../../components/logo/app-logo.component';
                   [(ngModel)]="formData.username" 
                   name="username" 
                   required 
-                  placeholder="e.g. tejas" 
+                  placeholder="e.g. rahul" 
                   class="form-control text-sm">
               </div>
             </div>
@@ -63,22 +63,22 @@ import { AppLogoComponent } from '../../components/logo/app-logo.component';
                 [(ngModel)]="formData.email" 
                 name="email" 
                 required 
-                placeholder="tejas@fingoal.com" 
-                class="form-control text-sm">
-            </div>
-
-            <div class="form-group mb-0">
-              <label class="form-label">Password <span class="text-rose-500">*</span></label>
-              <input 
-                type="password" 
-                [(ngModel)]="formData.password" 
-                name="password" 
-                required 
-                placeholder="••••••••" 
+                placeholder="rahul@fingoal.com" 
                 class="form-control text-sm">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div class="form-group mb-0">
+                <label class="form-label">Password <span class="text-rose-500">*</span></label>
+                <input 
+                  type="password" 
+                  [(ngModel)]="formData.password" 
+                  name="password" 
+                  required 
+                  placeholder="••••••••" 
+                  class="form-control text-sm">
+              </div>
+
               <div class="form-group mb-0">
                 <label class="form-label">Phone Number</label>
                 <input 
@@ -87,14 +87,6 @@ import { AppLogoComponent } from '../../components/logo/app-logo.component';
                   name="phone" 
                   placeholder="+91 98765 43210" 
                   class="form-control text-sm">
-              </div>
-
-              <div class="form-group mb-0">
-                <label class="form-label">Account Role <span class="text-rose-500">*</span></label>
-                <select [(ngModel)]="formData.role" name="role" class="form-select text-sm font-semibold">
-                  <option value="admin">Admin</option>
-                  <option value="employee">Employee</option>
-                </select>
               </div>
             </div>
 
@@ -114,7 +106,7 @@ import { AppLogoComponent } from '../../components/logo/app-logo.component';
               [disabled]="loading || !agreeTerms || !formData.fullName || !formData.email || !formData.password" 
               class="w-full btn btn-primary py-3 rounded-xl font-bold shadow-md flex items-center justify-center gap-2 mt-4">
               <i *ngIf="loading" class="fa-solid fa-spinner fa-spin"></i>
-              <span>{{ loading ? 'Registering Account...' : 'Sign Up' }}</span>
+              <span>{{ loading ? 'Registering Account...' : 'Sign Up as Employee' }}</span>
             </button>
 
           </form>
@@ -142,7 +134,7 @@ export class RegisterComponent {
     email: '',
     password: '',
     phone: '',
-    role: 'admin'
+    role: 'employee'
   };
 
   agreeTerms = true;

@@ -17,10 +17,11 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
     <div class="p-4 sm:p-6 pb-12 space-y-4 sm:space-y-6 max-w-7xl mx-auto">
       
       <!-- Top Welcome Banner & Clock Actions -->
-      <div class="card p-5 sm:p-6 bg-gradient-to-r from-white via-blue-50/30 to-indigo-50/30 border border-slate-200/80 shadow-xs space-y-4">
+      <div class="card p-4 sm:p-5 lg:p-6 bg-gradient-to-r from-white via-blue-50/30 to-indigo-50/30 border border-slate-200/80 shadow-xs">
         
-        <!-- Row 1: Profile Info -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          
+          <!-- Left: Profile Info -->
           <div class="flex items-center gap-3.5">
             <img 
               [src]="authService.currentUser()?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + (authService.currentUser()?.fullName || 'User')" 
@@ -45,15 +46,45 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
             </div>
           </div>
 
-          <!-- Punctuality / Shift Pill -->
-          <div class="hidden lg:flex items-center gap-2 bg-white/80 px-3.5 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 shadow-2xs">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Shift: 10:00 AM – 06:00 PM</span>
+          <!-- Right (Desktop): Shift Badge + Compact Action Buttons -->
+          <div class="hidden md:flex items-center gap-2.5">
+            <!-- Punctuality / Shift Pill -->
+            <div class="flex items-center gap-2 bg-white/90 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 shadow-2xs">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Shift: 10:00 AM – 06:00 PM</span>
+            </div>
+
+            <!-- Desktop Action Buttons (Smaller, Beside Shift) -->
+            <button 
+              (click)="onClockIn()" 
+              [disabled]="todayCheckedIn" 
+              class="btn btn-success text-xs font-bold py-2 px-3.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5"
+              [ngClass]="todayCheckedIn ? 'opacity-90 cursor-default ring-1 ring-emerald-400' : 'hover:scale-[1.02]'">
+              <i class="fa-solid fa-fingerprint text-sm"></i>
+              <span>{{ todayCheckedIn ? 'Clocked In (' + checkInTime + ')' : 'Clock In' }}</span>
+            </button>
+            
+            <button 
+              (click)="onClockOut()" 
+              [disabled]="todayCheckedOut" 
+              class="btn btn-secondary text-xs font-bold py-2 px-3.5 rounded-xl border border-slate-200 shadow-xs transition-all flex items-center gap-1.5"
+              [ngClass]="todayCheckedOut ? 'opacity-80 bg-slate-100 text-slate-500 cursor-default ring-1 ring-slate-300' : 'hover:scale-[1.02] hover:bg-slate-100'">
+              <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
+              <span>{{ todayCheckedOut ? 'Clocked Out (' + checkOutTime + ')' : 'Clock Out' }}</span>
+            </button>
+
+            <button 
+              (click)="openMyPayslip()" 
+              class="btn btn-primary text-xs font-bold py-2 px-3.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5 hover:scale-[1.02]">
+              <i class="fa-solid fa-receipt text-sm"></i>
+              <span>View Payslip</span>
+            </button>
           </div>
+
         </div>
 
-        <!-- Row 2: Dedicated Punch & Action Strip (Separate Line for Mobile & Desktop) -->
-        <div class="pt-3 border-t border-slate-200/70 grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+        <!-- Mobile Action Buttons (Dedicated row on small screens < md) -->
+        <div class="md:hidden pt-3 border-t border-slate-200/70 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
           <button 
             (click)="onClockIn()" 
             [disabled]="todayCheckedIn" 
@@ -80,7 +111,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
           </button>
         </div>
 
-      </div>div>
+      </div>
 
       <!-- KPI Summary Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

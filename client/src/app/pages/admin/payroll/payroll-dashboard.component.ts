@@ -266,71 +266,71 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
         </div>
 
         <div class="table-responsive-wrapper">
-          <table class="table-modern text-xs">
+          <table class="table-modern text-[11px] sm:text-xs">
             <thead>
-              <tr>
-                <th class="py-3 px-3">Employee Name</th>
-                <th class="py-3 px-3">Base Salary</th>
-                <th class="py-3 px-3 text-center">Payable Days</th>
-                <th class="py-3 px-3">Per-Day Rate</th>
-                <th class="py-3 px-3 text-blue-700 font-bold">Working Days Amount</th>
-                <th class="py-3 px-3">Leave Deduction</th>
-                <th class="py-3 px-3">Loan Disbursed</th>
-                <th class="py-3 px-3 text-emerald-700 font-bold">Incentive</th>
-                <th class="py-3 px-3 font-bold text-slate-900">Net Payable</th>
-                <th class="py-3 px-3 text-right">Action</th>
+              <tr class="text-[10px] sm:text-[11px]">
+                <th class="py-2.5 px-2">Employee</th>
+                <th class="py-2.5 px-2">Base Salary</th>
+                <th class="py-2.5 px-2 text-center">Pay Days</th>
+                <th class="py-2.5 px-2">Rate/Day</th>
+                <th class="py-2.5 px-2 text-blue-700 font-bold">Earned Pay</th>
+                <th class="py-2.5 px-2">Leave Ded.</th>
+                <th class="py-2.5 px-2">Loan Disb.</th>
+                <th class="py-2.5 px-2 text-emerald-700 font-bold">Incentive</th>
+                <th class="py-2.5 px-2 font-bold text-slate-900">Net Pay</th>
+                <th class="py-2.5 px-2 text-right">Action</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
               <tr *ngFor="let item of taxPayrollList" class="transition-colors">
                 
-                <td class="py-3.5 px-3 flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-2xs">
+                <td class="py-2.5 px-2 flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-[10px] shadow-2xs flex-shrink-0">
                     {{ getInitials(item.employeeName) }}
                   </div>
-                  <div>
-                    <div class="font-bold text-slate-900">{{ item.employeeName }}</div>
-                    <div class="text-[10px] text-slate-400 font-medium">{{ item.designation || 'Staff Member' }}</div>
+                  <div class="min-w-0">
+                    <div class="font-bold text-slate-900 truncate max-w-[120px]">{{ item.employeeName }}</div>
+                    <div class="text-[9px] text-slate-400 font-medium truncate max-w-[120px]">{{ item.designation || 'Staff Member' }}</div>
                   </div>
                 </td>
 
-                <td class="py-3.5 px-3 font-bold font-mono text-slate-800">
+                <td class="py-2.5 px-2 font-bold font-mono text-slate-800">
                   ₹{{ item.salaryAmount?.toLocaleString() }}
                 </td>
 
-                <td class="py-3.5 px-3 text-center font-mono font-bold text-blue-700">
-                  {{ item.payableDays }} Days
+                <td class="py-2.5 px-2 text-center font-mono font-bold text-blue-700">
+                  {{ item.payableDays }}d
                 </td>
 
-                <td class="py-3.5 px-3 font-mono text-slate-600">
-                  ₹{{ item.perDayRate?.toLocaleString() }}/d
+                <td class="py-2.5 px-2 font-mono text-slate-600">
+                  ₹{{ item.perDayRate?.toLocaleString() }}
                 </td>
 
-                <!-- Working Days Amount (Payable Days × Per-Day Rate) -->
-                <td class="py-3.5 px-3 font-bold font-mono text-blue-700">
+                <!-- Earned Pay (Payable Days × Per-Day Rate) -->
+                <td class="py-2.5 px-2 font-bold font-mono text-blue-700">
                   ₹{{ getWorkingDaysAmount(item).toLocaleString() }}
                 </td>
 
-                <td class="py-3.5 px-3 font-mono font-bold" [ngClass]="item.leaveDeduction > 0 ? 'text-rose-600' : 'text-slate-400'">
+                <td class="py-2.5 px-2 font-mono font-bold" [ngClass]="item.leaveDeduction > 0 ? 'text-rose-600' : 'text-slate-400'">
                   ₹{{ item.leaveDeduction?.toLocaleString() }}
                 </td>
 
-                <td class="py-3.5 px-3 font-mono text-slate-800">
+                <td class="py-2.5 px-2 font-mono text-slate-800">
                   ₹{{ (item.totalLoanDisbursed || 0)?.toLocaleString() }}
                 </td>
 
-                <td class="py-3.5 px-3 font-mono font-bold" [ngClass]="item.totalIncentive > 0 ? 'text-emerald-700' : 'text-slate-400'">
+                <td class="py-2.5 px-2 font-mono font-bold" [ngClass]="item.totalIncentive > 0 ? 'text-emerald-700' : 'text-slate-400'">
                   + ₹{{ (item.totalIncentive || 0)?.toLocaleString() }}
                 </td>
 
-                <td class="py-3.5 px-3 font-black font-mono text-emerald-700 text-sm">
+                <td class="py-2.5 px-2 font-black font-mono text-emerald-700">
                   ₹{{ item.netPayable?.toLocaleString() }}
                 </td>
 
-                <td class="py-3.5 px-3 text-right">
-                  <button (click)="openPayslip(item)" class="btn-action-view">
-                    <i class="fa-solid fa-receipt text-xs"></i>
-                    <span>Payslip</span>
+                <td class="py-2.5 px-2 text-right">
+                  <button (click)="openPayslip(item)" class="btn-action-view text-[11px] py-1 px-2">
+                    <i class="fa-solid fa-receipt text-[10px]"></i>
+                    <span>Slip</span>
                   </button>
                 </td>
 

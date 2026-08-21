@@ -155,10 +155,10 @@ import { IncentiveRecord } from '../../../models';
           </span>
         </div>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs">
+        <div class="table-responsive-wrapper">
+          <table class="table-modern text-xs">
             <thead>
-              <tr class="border-b border-slate-100 text-slate-400 text-left font-semibold">
+              <tr>
                 <th class="py-3 px-3">Date</th>
                 <th class="py-3 px-3">Borrower & Category</th>
                 <th class="py-3 px-3">Loan Amount</th>
@@ -168,15 +168,15 @@ import { IncentiveRecord } from '../../../models';
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
-              <tr *ngFor="let rec of records" class="hover:bg-slate-50/70 transition-colors">
+              <tr *ngFor="let rec of records" class="transition-colors">
                 
-                <td class="py-3.5 px-3 font-mono text-slate-700">
-                  <div>{{ rec.dateStr }}</div>
+                <td class="py-3.5 px-3 font-mono font-bold text-slate-800">
+                  {{ rec.dateStr }}
                 </td>
 
                 <td class="py-3.5 px-3">
                   <div class="font-bold text-slate-800">{{ rec.customerName || 'Direct Borrower' }}</div>
-                  <div class="text-[10px] text-slate-400">{{ rec.loanType || 'Auto Loan' }}</div>
+                  <div class="text-[10px] text-slate-400 font-semibold">{{ rec.loanType || 'Auto Loan' }}</div>
                 </td>
 
                 <td class="py-3.5 px-3 font-mono font-bold text-slate-900">
@@ -198,8 +198,8 @@ import { IncentiveRecord } from '../../../models';
                   <button 
                     (click)="selectedDetail = rec" 
                     title="View Full Loan Details & Remarks" 
-                    class="text-blue-600 hover:text-blue-800 p-1.5 rounded-lg hover:bg-blue-50 text-xs transition-colors">
-                    <i class="fa-solid fa-circle-info text-sm"></i>
+                    class="btn-action-view">
+                    <i class="fa-solid fa-circle-info text-xs"></i> View
                   </button>
                 </td>
 

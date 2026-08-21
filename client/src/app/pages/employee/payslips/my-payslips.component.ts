@@ -41,27 +41,27 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
       <!-- Payslips Table Card -->
       <div class="card p-6 border border-slate-200 space-y-4">
         
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs">
+        <div class="table-responsive-wrapper">
+          <table class="table-modern text-xs">
             <thead>
-              <tr class="border-b border-slate-100 text-slate-400 text-left font-semibold">
-                <th class="py-3">Pay Period</th>
-                <th class="py-3 text-center">Standard Days</th>
-                <th class="py-3 text-center">Payable Days</th>
-                <th class="py-3">Base Salary</th>
-                <th class="py-3">Per-Day Rate</th>
-                <th class="py-3">Leave Deduction</th>
-                <th class="py-3 text-emerald-700 font-bold">Incentive</th>
-                <th class="py-3 font-bold text-slate-900">Net Salary</th>
-                <th class="py-3 text-center">Status</th>
-                <th class="py-3 text-right">Action</th>
+              <tr>
+                <th class="py-3 px-3">Pay Period</th>
+                <th class="py-3 px-3 text-center">Standard Days</th>
+                <th class="py-3 px-3 text-center">Payable Days</th>
+                <th class="py-3 px-3">Base Salary</th>
+                <th class="py-3 px-3">Per-Day Rate</th>
+                <th class="py-3 px-3">Leave Deduction</th>
+                <th class="py-3 px-3 text-emerald-700 font-bold">Incentive</th>
+                <th class="py-3 px-3 font-bold text-slate-900">Net Salary</th>
+                <th class="py-3 px-3 text-center">Status</th>
+                <th class="py-3 px-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
-              <tr *ngFor="let slip of payslips" class="hover:bg-slate-50/70 transition-colors">
+              <tr *ngFor="let slip of payslips" class="transition-colors">
                 
-                <td class="py-4 font-bold text-slate-900 flex items-center gap-2.5">
-                  <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs">
+                <td class="py-4 px-3 font-bold text-slate-900 flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs shadow-2xs border border-blue-200">
                     <i class="fa-solid fa-file-invoice-dollar"></i>
                   </div>
                   <div>
@@ -70,27 +70,27 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                   </div>
                 </td>
 
-                <td class="py-4 text-center font-mono text-slate-700 font-bold">{{ slip.totalWorkingDays || 30 }} Days</td>
+                <td class="py-4 px-3 text-center font-mono text-slate-700 font-bold">{{ slip.totalWorkingDays || 30 }} Days</td>
                 
-                <td class="py-4 text-center font-mono font-black" [ngClass]="slip.payableDays > 0 ? 'text-emerald-700' : 'text-slate-500'">
+                <td class="py-4 px-3 text-center font-mono font-black" [ngClass]="slip.payableDays > 0 ? 'text-emerald-700' : 'text-slate-500'">
                   {{ slip.payableDays }} Days
                 </td>
                 
-                <td class="py-4 font-mono text-slate-800 font-bold">₹{{ slip.baseSalary?.toLocaleString() }}</td>
+                <td class="py-4 px-3 font-mono text-slate-800 font-bold">₹{{ slip.baseSalary?.toLocaleString() }}</td>
                 
-                <td class="py-4 font-mono text-slate-500">₹{{ slip.perDayRate?.toLocaleString() }}/d</td>
+                <td class="py-4 px-3 font-mono text-slate-500">₹{{ slip.perDayRate?.toLocaleString() }}/d</td>
                 
-                <td class="py-4 font-mono font-bold" [ngClass]="slip.leaveDeduction > 0 ? 'text-rose-600' : 'text-slate-400'">
+                <td class="py-4 px-3 font-mono font-bold" [ngClass]="slip.leaveDeduction > 0 ? 'text-rose-600' : 'text-slate-400'">
                   ₹{{ slip.leaveDeduction?.toLocaleString() }}
                 </td>
 
-                <td class="py-4 font-mono font-bold" [ngClass]="slip.totalIncentive > 0 ? 'text-emerald-700' : 'text-slate-400'">
+                <td class="py-4 px-3 font-mono font-bold" [ngClass]="slip.totalIncentive > 0 ? 'text-emerald-700' : 'text-slate-400'">
                   + ₹{{ (slip.totalIncentive || slip.allowances?.incentive || 0)?.toLocaleString() }}
                 </td>
                 
-                <td class="py-4 font-mono font-black text-sm text-emerald-700">₹{{ slip.netSalary?.toLocaleString() }}</td>
+                <td class="py-4 px-3 font-mono font-black text-sm text-emerald-700">₹{{ slip.netSalary?.toLocaleString() }}</td>
                 
-                <td class="py-4 text-center">
+                <td class="py-4 px-3 text-center">
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-[10px]"
                     [ngClass]="slip.netSalary > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-600'">
                     <span class="w-1.5 h-1.5 rounded-full" [ngClass]="slip.netSalary > 0 ? 'bg-emerald-500' : 'bg-slate-400'"></span>
@@ -98,11 +98,11 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                   </span>
                 </td>
                 
-                <td class="py-4 text-right">
+                <td class="py-4 px-3 text-right">
                   <button 
                     (click)="openPayslip(slip.month || selectedMonth, slip.year || selectedYear)" 
-                    class="btn btn-secondary btn-sm text-blue-700 font-bold border-blue-200 hover:bg-blue-50">
-                    <i class="fa-solid fa-eye mr-1"></i> View Payslip
+                    class="btn-action-view">
+                    <i class="fa-solid fa-eye text-xs"></i> View Slip
                   </button>
                 </td>
 

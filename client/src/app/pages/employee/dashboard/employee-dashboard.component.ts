@@ -17,25 +17,27 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
     <div class="p-4 sm:p-6 pb-12 space-y-4 sm:space-y-6 max-w-7xl mx-auto">
       
       <!-- Top Welcome Banner & Clock Actions -->
-      <div class="card p-4 sm:p-6 bg-gradient-to-r from-white via-blue-50/40 to-indigo-50/40 border border-slate-200">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+      <div class="card p-5 sm:p-6 bg-gradient-to-r from-white via-blue-50/30 to-indigo-50/30 border border-slate-200/80 shadow-xs space-y-4">
+        
+        <!-- Row 1: Profile Info -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
             <img 
               [src]="authService.currentUser()?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + (authService.currentUser()?.fullName || 'User')" 
               class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white border-2 border-white shadow-md object-cover flex-shrink-0" 
               alt="Avatar">
             <div>
               <div class="flex flex-wrap items-center gap-2">
-                <h1 class="text-lg sm:text-xl font-extrabold text-slate-900">{{ authService.currentUser()?.fullName || 'Employee' }}</h1>
+                <h1 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">{{ authService.currentUser()?.fullName || 'Employee' }}</h1>
                 <span *ngIf="authService.currentUser()?.employeeId" class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 font-mono text-xs font-bold border border-blue-200">
-                  ID: #{{ authService.currentUser()?.employeeId }}
+                  #{{ authService.currentUser()?.employeeId }}
                 </span>
                 <span class="badge badge-present text-[10px]">Active</span>
               </div>
-              <p class="text-xs text-slate-500 font-medium mt-0.5">
+              <p class="text-xs text-slate-500 font-semibold mt-0.5">
                 {{ authService.currentUser()?.designation || 'Staff Member' }}
               </p>
-              <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 mt-2">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 mt-1.5">
                 <span class="truncate max-w-[220px]"><i class="fa-regular fa-envelope mr-1 text-slate-400"></i>{{ authService.currentUser()?.email }}</span>
                 <span class="hidden sm:inline">•</span>
                 <span><i class="fa-solid fa-indian-rupee-sign mr-1 text-blue-600"></i>Base: ₹{{ (authService.currentUser()?.baseSalary || 50000).toLocaleString() }}/mo</span>
@@ -43,33 +45,42 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
             </div>
           </div>
 
-          <!-- Quick Action Buttons -->
-          <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
-            <button 
-              (click)="onClockIn()" 
-              [disabled]="todayCheckedIn" 
-              class="flex-1 sm:flex-none btn btn-success text-xs font-bold py-2.5 px-3 sm:px-4 rounded-xl shadow-xs"
-              [ngClass]="todayCheckedIn ? 'opacity-90 cursor-default' : ''">
-              <i class="fa-solid fa-fingerprint"></i>
-              <span>{{ todayCheckedIn ? 'Clocked In (' + checkInTime + ')' : 'Clock In' }}</span>
-            </button>
-            <button 
-              (click)="onClockOut()" 
-              [disabled]="todayCheckedOut"
-              class="flex-1 sm:flex-none btn btn-secondary text-xs font-bold py-2.5 px-3 sm:px-4 rounded-xl border border-slate-200 shadow-xs"
-              [ngClass]="todayCheckedOut ? 'opacity-80 bg-slate-100 text-slate-500 cursor-default' : ''">
-              <i class="fa-solid fa-arrow-right-from-bracket"></i>
-              <span>{{ todayCheckedOut ? 'Clocked Out (' + checkOutTime + ')' : 'Clock Out' }}</span>
-            </button>
-            <button 
-              (click)="openMyPayslip()" 
-              class="flex-1 sm:flex-none btn btn-primary text-xs font-bold py-2.5 px-3 sm:px-4 rounded-xl shadow-xs">
-              <i class="fa-solid fa-receipt"></i>
-              <span>View Payslip</span>
-            </button>
+          <!-- Punctuality / Shift Pill -->
+          <div class="hidden lg:flex items-center gap-2 bg-white/80 px-3.5 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 shadow-2xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Shift: 10:00 AM – 06:00 PM</span>
           </div>
         </div>
-      </div>
+
+        <!-- Row 2: Dedicated Punch & Action Strip (Separate Line for Mobile & Desktop) -->
+        <div class="pt-3 border-t border-slate-200/70 grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+          <button 
+            (click)="onClockIn()" 
+            [disabled]="todayCheckedIn" 
+            class="btn btn-success w-full py-3 px-4 rounded-xl text-xs font-bold shadow-xs transition-all flex items-center justify-center gap-2"
+            [ngClass]="todayCheckedIn ? 'opacity-90 cursor-default ring-2 ring-emerald-400/40' : 'hover:scale-[1.01]'">
+            <i class="fa-solid fa-fingerprint text-base"></i>
+            <span>{{ todayCheckedIn ? 'Clocked In (' + checkInTime + ')' : 'Clock In' }}</span>
+          </button>
+          
+          <button 
+            (click)="onClockOut()" 
+            [disabled]="todayCheckedOut" 
+            class="btn btn-secondary w-full py-3 px-4 rounded-xl text-xs font-bold border border-slate-200 shadow-xs transition-all flex items-center justify-center gap-2"
+            [ngClass]="todayCheckedOut ? 'opacity-80 bg-slate-100 text-slate-500 cursor-default ring-2 ring-slate-300' : 'hover:scale-[1.01] hover:bg-slate-100'">
+            <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+            <span>{{ todayCheckedOut ? 'Clocked Out (' + checkOutTime + ')' : 'Clock Out' }}</span>
+          </button>
+
+          <button 
+            (click)="openMyPayslip()" 
+            class="btn btn-primary w-full py-3 px-4 rounded-xl text-xs font-bold shadow-xs transition-all flex items-center justify-center gap-2 hover:scale-[1.01]">
+            <i class="fa-solid fa-receipt text-base"></i>
+            <span>View Payslip</span>
+          </button>
+        </div>
+
+      </div>div>
 
       <!-- KPI Summary Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

@@ -187,40 +187,40 @@ import { AttendanceRecord } from '../../../models';
             </div>
           </div>
 
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs">
+          <div class="table-responsive-wrapper">
+            <table class="table-modern text-xs">
               <thead>
-                <tr class="border-b border-slate-100 text-slate-400 text-left font-semibold">
-                  <th class="py-2.5 px-2 w-8">
+                <tr>
+                  <th class="py-3 px-3 w-8">
                     <input 
                       type="checkbox" 
                       [checked]="isAllSelected()" 
                       (change)="toggleSelectAll()" 
                       class="rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
                   </th>
-                  <th class="py-2.5">Date</th>
-                  <th class="py-2.5">Day</th>
-                  <th class="py-2.5">Check In</th>
-                  <th class="py-2.5">Check Out</th>
-                  <th class="py-2.5">Status</th>
-                  <th class="py-2.5">Remarks</th>
-                  <th class="py-2.5 text-right">Action</th>
+                  <th class="py-3 px-3">Date</th>
+                  <th class="py-3 px-3">Day</th>
+                  <th class="py-3 px-3">Check In</th>
+                  <th class="py-3 px-3">Check Out</th>
+                  <th class="py-3 px-3 text-center">Status</th>
+                  <th class="py-3 px-3">Remarks</th>
+                  <th class="py-3 px-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 font-medium">
-                <tr *ngFor="let rec of records" class="hover:bg-slate-50/70 transition-colors" [ngClass]="{'bg-blue-50/40': selectedIds.has(rec._id)}">
-                  <td class="py-3 px-2 w-8">
+                <tr *ngFor="let rec of records" class="transition-colors" [ngClass]="{'bg-blue-50/50': selectedIds.has(rec._id)}">
+                  <td class="py-3.5 px-3 w-8">
                     <input 
                       type="checkbox" 
                       [checked]="selectedIds.has(rec._id)" 
                       (change)="toggleSelect(rec._id)" 
                       class="rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
                   </td>
-                  <td class="py-3 font-mono font-bold text-slate-800">{{ rec.dateStr }}</td>
-                  <td class="py-3 text-slate-500">{{ getWeekday(rec.dateStr) }}</td>
-                  <td class="py-3 text-slate-700 font-mono">{{ rec.checkInTime || '—' }}</td>
-                  <td class="py-3 text-slate-700 font-mono">{{ rec.checkOutTime || '—' }}</td>
-                  <td class="py-3">
+                  <td class="py-3.5 px-3 font-mono font-bold text-slate-800">{{ rec.dateStr }}</td>
+                  <td class="py-3.5 px-3 text-slate-500 font-semibold">{{ getWeekday(rec.dateStr) }}</td>
+                  <td class="py-3.5 px-3 text-slate-800 font-mono font-semibold">{{ rec.checkInTime || '—' }}</td>
+                  <td class="py-3.5 px-3 text-slate-800 font-mono font-semibold">{{ rec.checkOutTime || '—' }}</td>
+                  <td class="py-3.5 px-3 text-center">
                     <span 
                       class="badge text-[10px]"
                       [ngClass]="{
@@ -231,25 +231,25 @@ import { AttendanceRecord } from '../../../models';
                       {{ rec.status }}
                     </span>
                   </td>
-                  <td class="py-3 text-slate-500 truncate max-w-[150px]">{{ rec.remarks || 'Daily log' }}</td>
-                  <td class="py-3 text-right">
-                    <div class="flex items-center justify-end gap-2">
+                  <td class="py-3.5 px-3 text-slate-500 truncate max-w-[150px]">{{ rec.remarks || 'Daily log' }}</td>
+                  <td class="py-3.5 px-3 text-right">
+                    <div class="flex items-center justify-end gap-1.5">
                       <button 
                         (click)="editRecord(rec)" 
-                        class="text-blue-600 hover:text-blue-800 font-bold p-1 rounded hover:bg-blue-50 text-xs">
-                        <i class="fa-solid fa-pen-to-square mr-0.5"></i> Edit
+                        class="btn-action-view">
+                        <i class="fa-solid fa-pen-to-square text-xs"></i> Edit
                       </button>
                       <button 
                         (click)="deleteRecord(rec)" 
                         title="Delete Attendance"
-                        class="text-rose-500 hover:text-rose-700 font-bold p-1 rounded hover:bg-rose-50 text-xs">
-                        <i class="fa-solid fa-trash-can mr-0.5"></i> Delete
+                        class="btn-action-danger">
+                        <i class="fa-solid fa-trash-can text-xs"></i> Delete
                       </button>
                     </div>
                   </td>
                 </tr>
                 <tr *ngIf="records.length === 0">
-                  <td colspan="7" class="py-12 text-center text-slate-400">
+                  <td colspan="8" class="py-12 text-center text-slate-400">
                     <i class="fa-regular fa-calendar-xmark text-2xl mb-2 text-slate-300"></i>
                     <p>No attendance records logged yet. Fill out the form on the left to save your first record!</p>
                   </td>

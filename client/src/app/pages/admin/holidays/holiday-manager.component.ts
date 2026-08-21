@@ -57,11 +57,11 @@ import { Holiday } from '../../../models';
 
           <!-- Actions -->
           <div class="flex justify-end gap-2 pt-4 mt-4 border-t border-slate-100">
-            <button (click)="openEditModal(h)" class="text-blue-600 hover:text-blue-800 text-xs font-bold p-1 rounded hover:bg-blue-50">
-              <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
+            <button (click)="openEditModal(h)" class="btn-action-view">
+              <i class="fa-solid fa-pen-to-square text-xs"></i> Edit
             </button>
-            <button (click)="deleteHoliday(h)" class="text-rose-600 hover:text-rose-800 text-xs font-bold p-1 rounded hover:bg-rose-50">
-              <i class="fa-solid fa-trash mr-1"></i> Delete
+            <button (click)="deleteHoliday(h)" class="btn-action-danger">
+              <i class="fa-solid fa-trash-can text-xs"></i> Delete
             </button>
           </div>
 

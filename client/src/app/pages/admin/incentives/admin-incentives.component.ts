@@ -123,19 +123,23 @@ import { IncentiveRecord, User } from '../../../models';
 
       <!-- Master Incentive Grid -->
       <div class="card p-6 border border-slate-200 space-y-4">
-        <div class="flex justify-between items-center">
-          <span class="text-xs text-slate-500 font-semibold">
-            Found <strong class="text-slate-800">{{ records.length }}</strong> Loan Disbursals
-          </span>
-          <span class="text-xs font-bold text-emerald-700">
-            Total Incentive: ₹{{ totalIncentive?.toLocaleString() }}
-          </span>
+      <!-- Incentive Audit Table Card -->
+      <div class="card p-6 border border-slate-200">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-slate-900">Live Sourced Loans & Incentives Ledger</h3>
+            <p class="text-xs text-slate-400">Total verified loans disbursed: {{ records.length }} entries</p>
+          </div>
+          <button (click)="loadIncentives()" class="btn btn-secondary btn-sm flex items-center gap-1.5 shadow-2xs">
+            <i class="fa-solid fa-rotate-right"></i>
+            <span>Refresh</span>
+          </button>
         </div>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs">
+        <div class="table-responsive-wrapper">
+          <table class="table-modern text-xs">
             <thead>
-              <tr class="border-b border-slate-100 text-slate-400 text-left font-semibold">
+              <tr>
                 <th class="py-3 px-3">Employee</th>
                 <th class="py-3 px-3">Date</th>
                 <th class="py-3 px-3">Borrower & Category</th>
@@ -143,15 +147,15 @@ import { IncentiveRecord, User } from '../../../models';
                 <th class="py-3 px-3 text-center">Slab Tier</th>
                 <th class="py-3 px-3 font-bold text-slate-900">Incentive</th>
                 <th class="py-3 px-3 text-center">Source</th>
-                <th class="py-3 px-3 text-right">Action</th>
+                <th class="py-3 px-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
-              <tr *ngFor="let rec of records" class="hover:bg-slate-50/70 transition-colors">
+              <tr *ngFor="let rec of records" class="transition-colors">
                 
                 <!-- Employee -->
                 <td class="py-3.5 px-3 flex items-center gap-2.5">
-                  <img [src]="getEmpAvatar(rec)" class="w-7 h-7 rounded-full bg-slate-100 border" alt="">
+                  <img [src]="getEmpAvatar(rec)" class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 shadow-2xs" alt="">
                   <div>
                     <div class="flex items-center gap-1.5">
                       <span class="font-bold text-slate-800">{{ getEmpName(rec) }}</span>
@@ -164,14 +168,14 @@ import { IncentiveRecord, User } from '../../../models';
                 </td>
 
                 <!-- Date -->
-                <td class="py-3.5 px-3 font-mono text-slate-700">
-                  <div>{{ rec.dateStr }}</div>
+                <td class="py-3.5 px-3 font-mono text-slate-700 font-bold">
+                  {{ rec.dateStr }}
                 </td>
 
                 <!-- Borrower & Details -->
                 <td class="py-3.5 px-3">
                   <div class="font-bold text-slate-800">{{ rec.customerName || 'Direct Borrower' }}</div>
-                  <div class="text-[10px] text-slate-400">{{ rec.loanType || 'Auto Loan' }}</div>
+                  <div class="text-[10px] text-slate-400 font-semibold">{{ rec.loanType || 'Auto Loan' }}</div>
                 </td>
 
                 <!-- Loan Amount -->
@@ -195,7 +199,7 @@ import { IncentiveRecord, User } from '../../../models';
                 <!-- Source -->
                 <td class="py-3.5 px-3 text-center">
                   <span class="px-2 py-0.5 rounded text-[10px] font-semibold"
-                    [ngClass]="rec.loggedBy === 'Admin' ? 'bg-purple-50 text-purple-700' : 'bg-slate-100 text-slate-600'">
+                    [ngClass]="rec.loggedBy === 'Admin' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-slate-100 text-slate-600'">
                     {{ rec.loggedBy || 'Self' }}
                   </span>
                 </td>
@@ -206,30 +210,29 @@ import { IncentiveRecord, User } from '../../../models';
                     <button 
                       (click)="selectedDetail = rec" 
                       title="View Full Loan Details & Remarks" 
-                      class="text-blue-600 hover:text-blue-800 p-1.5 rounded-lg hover:bg-blue-50 text-xs transition-colors">
-                      <i class="fa-solid fa-circle-info text-sm"></i>
+                      class="btn-action-view !px-2">
+                      <i class="fa-solid fa-circle-info text-xs"></i>
                     </button>
                     <button 
                       (click)="openEditModal(rec)" 
                       title="Edit Loan Disbursement" 
-                      class="text-amber-600 hover:text-amber-800 p-1.5 rounded-lg hover:bg-amber-50 text-xs transition-colors">
-                      <i class="fa-solid fa-pen-to-square text-sm"></i>
+                      class="btn-action-view !px-2 !bg-amber-50 !text-amber-700 !border-amber-200 hover:!bg-amber-100">
+                      <i class="fa-solid fa-pen-to-square text-xs"></i>
                     </button>
                     <button 
                       (click)="deleteRecord(rec)" 
                       title="Delete Record" 
-                      class="text-rose-500 hover:text-rose-700 p-1.5 rounded-lg hover:bg-rose-50 text-xs transition-colors">
-                      <i class="fa-solid fa-trash-can text-sm"></i>
+                      class="btn-action-danger !px-2">
+                      <i class="fa-solid fa-trash-can text-xs"></i>
                     </button>
                   </div>
                 </td>
 
               </tr>
-
               <tr *ngIf="records.length === 0">
                 <td colspan="8" class="py-12 text-center text-slate-400">
-                  <i class="fa-solid fa-landmark text-3xl mb-2 text-slate-300"></i>
-                  <p>No loan disbursements found matching the filter criteria.</p>
+                  <i class="fa-solid fa-car-side text-2xl mb-2 text-slate-300"></i>
+                  <p>No loan disbursements found for this criteria.</p>
                 </td>
               </tr>
             </tbody>

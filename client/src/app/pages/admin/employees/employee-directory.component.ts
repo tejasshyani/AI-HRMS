@@ -67,25 +67,25 @@ import { User } from '../../../models';
 
       <!-- Employees Directory Table -->
       <div class="card p-6 border border-slate-200">
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs">
+        <div class="table-responsive-wrapper">
+          <table class="table-modern text-xs">
             <thead>
-              <tr class="border-b border-slate-100 text-slate-400 text-left font-semibold">
-                <th class="py-3">Employee</th>
-                <th class="py-3">Designation</th>
-                <th class="py-3">Contact</th>
-                <th class="py-3">Base Monthly Salary (₹)</th>
-                <th class="py-3 text-center">Status</th>
-                <th class="py-3 text-right">Actions</th>
+              <tr>
+                <th class="py-3 px-3">Employee</th>
+                <th class="py-3 px-3">Designation</th>
+                <th class="py-3 px-3">Contact</th>
+                <th class="py-3 px-3">Base Monthly Salary (₹)</th>
+                <th class="py-3 px-3 text-center">Status</th>
+                <th class="py-3 px-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
-              <tr *ngFor="let emp of filteredEmployees" class="hover:bg-slate-50/70 transition-colors">
+              <tr *ngFor="let emp of filteredEmployees" class="transition-colors">
                 
                 <!-- Employee info -->
-                <td class="py-3.5 flex items-center gap-3">
+                <td class="py-3.5 px-3 flex items-center gap-3">
                   <div class="relative">
-                    <img [src]="emp.avatar" class="w-9 h-9 rounded-xl bg-slate-100 border object-cover" alt="">
+                    <img [src]="emp.avatar" class="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 object-cover shadow-2xs" alt="">
                     <span *ngIf="emp.role === 'admin'" class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-purple-600 text-white rounded-full flex items-center justify-center text-[8px] shadow-xs" title="Administrator">
                       <i class="fa-solid fa-crown"></i>
                     </span>
@@ -107,18 +107,18 @@ import { User } from '../../../models';
                 </td>
 
                 <!-- Designation -->
-                <td class="py-3.5">
-                  <div class="font-semibold text-slate-800">{{ emp.designation || (emp.role === 'admin' ? 'Head of HR & Admin' : 'Tally Caller') }}</div>
+                <td class="py-3.5 px-3">
+                  <div class="font-bold text-slate-800">{{ emp.designation || (emp.role === 'admin' ? 'Head of HR & Admin' : 'Tally Caller') }}</div>
                 </td>
 
                 <!-- Contact -->
-                <td class="py-3.5 text-slate-600">
+                <td class="py-3.5 px-3 text-slate-600">
                   <div>{{ emp.email }}</div>
                   <div class="text-[10px] text-slate-400 font-mono">{{ emp.phone || '—' }}</div>
                 </td>
 
                 <!-- Base Salary Rate config input (Employees only) -->
-                <td class="py-3.5">
+                <td class="py-3.5 px-3">
                   <div *ngIf="emp.role === 'employee'" class="flex items-center gap-1.5">
                     <span class="text-slate-500 font-bold text-xs">₹</span>
                     <input 
@@ -137,7 +137,7 @@ import { User } from '../../../models';
                 </td>
 
                 <!-- Active Status Toggle -->
-                <td class="py-3.5 text-center">
+                <td class="py-3.5 px-3 text-center">
                   <button 
                     (click)="toggleStatus(emp)" 
                     class="badge text-[10px] cursor-pointer hover:opacity-80 transition-opacity"
@@ -147,11 +147,11 @@ import { User } from '../../../models';
                 </td>
 
                 <!-- Actions -->
-                <td class="py-3.5 text-right">
+                <td class="py-3.5 px-3 text-right">
                   <button 
                     (click)="openEditModal(emp)" 
-                    class="text-blue-600 hover:text-blue-800 p-1.5 rounded-lg hover:bg-blue-50 text-xs transition-colors">
-                    <i class="fa-solid fa-user-pen"></i> Edit
+                    class="btn-action-view">
+                    <i class="fa-solid fa-user-pen text-xs"></i> Edit
                   </button>
                 </td>
 

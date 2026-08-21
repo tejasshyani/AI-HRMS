@@ -228,6 +228,93 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid #e2e8f0;
 }
 
+/* ==========================================================================
+   INTERACTIVE DATA TABLE UTILITIES
+   ========================================================================== */
+
+.table-responsive-wrapper {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-default);
+  background: #ffffff;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.04);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-modern {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table-modern thead th {
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  font-weight: 700;
+  font-size: 0.725rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.table-modern tbody tr {
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.table-modern tbody tr:hover {
+  background-color: #f8faff !important;
+}
+
+.table-modern tbody td {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.table-modern tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Action button pills */
+.btn-action-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #2563eb;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.btn-action-view:hover {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.12);
+}
+
+.btn-action-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #dc2626;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.btn-action-danger:hover {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.12);
+}
+
 /* Forms & Inputs - Modern Premium Styling */
 .form-group {
   display: flex;

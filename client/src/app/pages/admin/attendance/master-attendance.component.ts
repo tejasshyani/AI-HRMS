@@ -107,10 +107,11 @@ import { AttendanceRecord, User } from '../../../models';
           </div>
         </div>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs">
+        <!-- Master Table View with Checkboxes & Pagination -->
+        <div class="table-responsive-wrapper">
+          <table class="table-modern text-xs">
             <thead>
-              <tr class="border-b border-slate-100 text-slate-400 text-left font-semibold">
+              <tr>
                 <th class="py-3 px-3 w-8">
                   <input 
                     type="checkbox" 
@@ -125,11 +126,11 @@ import { AttendanceRecord, User } from '../../../models';
                 <th class="py-3 px-3 text-center">Status</th>
                 <th class="py-3 px-3 text-center">Source</th>
                 <th class="py-3 px-3">Remarks</th>
-                <th class="py-3 px-3 text-right">Admin Override</th>
+                <th class="py-3 px-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
-              <tr *ngFor="let rec of paginatedRecords" class="hover:bg-slate-50/70 transition-colors" [ngClass]="{'bg-blue-50/40': selectedIds.has(rec._id)}">
+              <tr *ngFor="let rec of paginatedRecords" class="transition-colors" [ngClass]="{'bg-blue-50/50': selectedIds.has(rec._id)}">
                 
                 <!-- Checkbox -->
                 <td class="py-3.5 px-3 w-8">
@@ -142,7 +143,7 @@ import { AttendanceRecord, User } from '../../../models';
 
                 <!-- Employee -->
                 <td class="py-3.5 px-3 flex items-center gap-2.5">
-                  <img [src]="getEmpAvatar(rec)" class="w-7 h-7 rounded-full bg-slate-100 border" alt="">
+                  <img [src]="getEmpAvatar(rec)" class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 shadow-2xs" alt="">
                   <div>
                     <div class="flex items-center gap-1.5">
                       <span class="font-bold text-slate-800">{{ getEmpName(rec) }}</span>
@@ -156,13 +157,13 @@ import { AttendanceRecord, User } from '../../../models';
 
                 <!-- Date -->
                 <td class="py-3.5 px-3 font-mono text-slate-700">
-                  <div>{{ rec.dateStr }}</div>
+                  <div class="font-bold">{{ rec.dateStr }}</div>
                   <div class="text-[10px] text-slate-400">{{ getDayName(rec.dateStr) }}</div>
                 </td>
 
                 <!-- Check In & Out -->
-                <td class="py-3.5 px-3 font-mono text-slate-800">{{ rec.checkInTime || '—' }}</td>
-                <td class="py-3.5 px-3 font-mono text-slate-800">{{ rec.checkOutTime || '—' }}</td>
+                <td class="py-3.5 px-3 font-mono text-slate-800 font-semibold">{{ rec.checkInTime || '—' }}</td>
+                <td class="py-3.5 px-3 font-mono text-slate-800 font-semibold">{{ rec.checkOutTime || '—' }}</td>
 
                 <!-- Status Badge -->
                 <td class="py-3.5 px-3 text-center">
@@ -180,7 +181,7 @@ import { AttendanceRecord, User } from '../../../models';
                 <!-- Source / LoggedBy -->
                 <td class="py-3.5 px-3 text-center">
                   <span class="px-2 py-0.5 rounded text-[10px] font-semibold"
-                    [ngClass]="rec.loggedBy === 'Admin' ? 'bg-purple-50 text-purple-700' : 'bg-slate-100 text-slate-600'">
+                    [ngClass]="rec.loggedBy === 'Admin' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-slate-100 text-slate-600'">
                     {{ rec.loggedBy || 'Self' }}
                   </span>
                 </td>
@@ -191,19 +192,20 @@ import { AttendanceRecord, User } from '../../../models';
                 <!-- Actions -->
                 <td class="py-3.5 px-3 text-right">
                   <div class="flex items-center justify-end gap-1.5">
-                    <button (click)="openOverrideModal(rec)" class="text-blue-600 hover:text-blue-800 font-bold p-1.5 rounded-lg hover:bg-blue-50 text-xs transition-colors">
-                      <i class="fa-solid fa-wrench mr-0.5"></i> Override
+                    <button (click)="openOverrideModal(rec)" class="btn-action-view">
+                      <i class="fa-solid fa-wrench text-[10px]"></i> Override
                     </button>
-                    <button (click)="deleteRecord(rec)" title="Delete Attendance" class="text-rose-500 hover:text-rose-700 font-bold p-1.5 rounded-lg hover:bg-rose-50 text-xs transition-colors">
-                      <i class="fa-solid fa-trash-can mr-0.5"></i> Delete
+                    <button (click)="deleteRecord(rec)" title="Delete Attendance" class="btn-action-danger">
+                      <i class="fa-solid fa-trash-can text-[10px]"></i> Delete
                     </button>
                   </div>
                 </td>
 
               </tr>
               <tr *ngIf="records.length === 0">
-                <td colspan="8" class="py-8 text-center text-slate-400">
-                  No attendance records found matching the filter criteria.
+                <td colspan="9" class="py-8 text-center text-slate-400">
+                  <i class="fa-regular fa-calendar-xmark text-2xl mb-2 text-slate-300"></i>
+                  <p>No matching attendance records found.</p>
                 </td>
               </tr>
             </tbody>

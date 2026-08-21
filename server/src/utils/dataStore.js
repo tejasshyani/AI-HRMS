@@ -153,18 +153,26 @@ const Store = {
     const idClean = identifier.toString().trim();
     const idLower = idClean.toLowerCase();
     if (!isUsingMemory()) {
+      if (/^\d+$/.test(idClean)) {
+        const empMatch = await User.findOne({ employeeId: idClean });
+        if (empMatch) return empMatch;
+      }
       return await User.findOne({
         $or: [
+          { employeeId: idClean },
           { email: idLower },
-          { username: idLower },
-          { employeeId: idClean }
+          { username: idLower }
         ]
       });
     }
+    if (/^\d+$/.test(idClean)) {
+      const empMatch = memoryStore.users.find(u => u.employeeId && u.employeeId.toString() === idClean);
+      if (empMatch) return empMatch;
+    }
     return memoryStore.users.find(
-      u => u.email.toLowerCase() === idLower || 
-           u.username.toLowerCase() === idLower ||
-           (u.employeeId && u.employeeId.toString() === idClean)
+      u => (u.employeeId && u.employeeId.toString() === idClean) ||
+           u.email.toLowerCase() === idLower || 
+           u.username.toLowerCase() === idLower
     ) || null;
   },
 

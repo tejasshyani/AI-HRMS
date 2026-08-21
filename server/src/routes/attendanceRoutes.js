@@ -9,6 +9,7 @@ router.use(authenticate);
 router.post('/clock-in', attendanceController.clockIn);
 router.post('/clock-out', attendanceController.clockOut);
 router.post('/log', attendanceController.logAttendance);
+router.post('/bulk-log', attendanceController.bulkLogAttendance);
 
 // View Queries
 router.get('/my-attendance', attendanceController.getMyAttendance);

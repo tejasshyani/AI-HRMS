@@ -113,8 +113,8 @@ exports.logAttendance = async (req, res) => {
       userId: finalUserId,
       date: finalDate,
       dateStr: finalDateStr,
-      checkInTime: checkInTime || '09:15 AM',
-      checkOutTime: checkOutTime || '06:30 PM',
+      checkInTime: checkInTime || '10:00 AM',
+      checkOutTime: checkOutTime || '06:00 PM',
       status: status || 'Present',
       remarks: remarks || '',
       loggedBy: req.user.role === 'admin' ? 'Admin' : 'Self'
@@ -124,6 +124,91 @@ exports.logAttendance = async (req, res) => {
       success: true,
       message: 'Attendance record saved successfully.',
       record
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Bulk / Date Range Attendance Logging (Admin & Employee self-service)
+exports.bulkLogAttendance = async (req, res) => {
+  try {
+    const {
+      userId: targetUserId,
+      startDate,
+      endDate,
+      status = 'Present',
+      checkInTime = '10:00 AM',
+      checkOutTime = '06:00 PM',
+      remarks = '',
+      excludeSundays = true
+    } = req.body;
+
+    if (!startDate || !endDate) {
+      return res.status(400).json({ success: false, message: 'Start date and End date are required.' });
+    }
+
+    let finalUserId = req.user._id;
+    if (req.user.role === 'admin' && targetUserId) {
+      finalUserId = targetUserId;
+    }
+
+    const startParts = startDate.split('-').map(Number);
+    const endParts = endDate.split('-').map(Number);
+
+    const start = new Date(startParts[0], startParts[1] - 1, startParts[2]);
+    const end = new Date(endParts[0], endParts[1] - 1, endParts[2]);
+
+    if (start > end) {
+      return res.status(400).json({ success: false, message: 'Start date must be before or equal to End date.' });
+    }
+
+    const createdRecords = [];
+    let cur = new Date(start);
+
+    while (cur <= end) {
+      const dayOfWeek = cur.getDay(); // 0 is Sunday
+      const yyyy = cur.getFullYear();
+      const mm = String(cur.getMonth() + 1).padStart(2, '0');
+      const dd = String(cur.getDate()).padStart(2, '0');
+      const dateStr = `${yyyy}-${mm}-${dd}`;
+
+      // If excludeSundays is true and it's Sunday, skip
+      if (excludeSundays && dayOfWeek === 0) {
+        cur.setDate(cur.getDate() + 1);
+        continue;
+      }
+
+      let cIn = checkInTime;
+      let cOut = checkOutTime;
+      if (status === 'Absent' || status === 'Leave') {
+        cIn = '—';
+        cOut = '—';
+      } else if (status === 'Half-Day') {
+        cIn = '02:00 PM';
+        cOut = '06:00 PM';
+      }
+
+      const rec = await Store.upsertAttendance({
+        userId: finalUserId,
+        date: new Date(cur),
+        dateStr,
+        checkInTime: cIn,
+        checkOutTime: cOut,
+        status,
+        remarks: remarks || (req.user.role === 'admin' ? 'Batch Attendance' : 'Self Date Range Log'),
+        loggedBy: req.user.role === 'admin' ? 'Admin' : 'Self'
+      });
+
+      createdRecords.push(rec);
+      cur.setDate(cur.getDate() + 1);
+    }
+
+    res.json({
+      success: true,
+      message: `Successfully logged attendance for ${createdRecords.length} day(s) (${startDate} to ${endDate}).`,
+      count: createdRecords.length,
+      records: createdRecords
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

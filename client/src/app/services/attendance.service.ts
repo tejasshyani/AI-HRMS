@@ -24,6 +24,19 @@ export class AttendanceService {
     return this.http.post<any>(`${this.apiUrl}/log`, record);
   }
 
+  bulkLogAttendance(data: {
+    userId?: string;
+    startDate: string;
+    endDate: string;
+    status: string;
+    checkInTime?: string;
+    checkOutTime?: string;
+    remarks?: string;
+    excludeSundays?: boolean;
+  }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/bulk-log`, data);
+  }
+
   getMyAttendance(params?: { month?: number; year?: number; startDate?: string; endDate?: string }): Observable<{ success: boolean; count: number; records: AttendanceRecord[] }> {
     let httpParams = new HttpParams();
     if (params?.month) httpParams = httpParams.set('month', params.month.toString());

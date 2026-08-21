@@ -15,12 +15,64 @@ const formatDateStr = (date = new Date()) => {
   return `${year}-${month}-${day}`;
 };
 
+// Helper to parse time string "HH:MM AM/PM" to decimal hours (e.g. "10:00 AM" -> 10.0, "02:00 PM" -> 14.0)
+function parseTimeToHours(timeStr) {
+  if (!timeStr || typeof timeStr !== 'string' || timeStr === '—') return null;
+  const match = timeStr.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+  if (!match) return null;
+  let hours = parseInt(match[1], 10);
+  const minutes = parseInt(match[2], 10);
+  const modifier = (match[3] || '').toUpperCase();
+  
+  if (modifier === 'PM' && hours < 12) {
+    hours += 12;
+  }
+  if (modifier === 'AM' && hours === 12) {
+    hours = 0;
+  }
+  return hours + (minutes / 60);
+}
+
+// Automatically determine Present / Half-Day / Absent based on FinGoal shift hours
+function determineAttendanceStatus(checkInTime, checkOutTime, currentStatus = 'Present') {
+  if (currentStatus === 'Absent' || currentStatus === 'Leave') {
+    return currentStatus;
+  }
+  
+  const inHours = parseTimeToHours(checkInTime);
+  const outHours = parseTimeToHours(checkOutTime);
+  
+  if (inHours !== null && outHours !== null) {
+    let totalHoursWorked = outHours - inHours;
+    if (totalHoursWorked < 0) totalHoursWorked += 24; // Handle shift crossing midnight if any
+    
+    // FinGoal Shift Rule:
+    // Full Day: >= 6.0 hours (e.g. 10:00 AM - 06:00 PM = 8.0h)
+    // Half-Day: 2.0 to < 6.0 hours (e.g. 10:00 AM - 02:00 PM = 4.0h, or 02:00 PM - 06:00 PM = 4.0h)
+    // Absent: < 2.0 hours
+    if (totalHoursWorked < 6.0 && totalHoursWorked >= 2.0) {
+      return 'Half-Day';
+    } else if (totalHoursWorked < 2.0) {
+      return 'Absent';
+    } else {
+      return 'Present';
+    }
+  }
+
+  // If only checkInTime is available (e.g. late check-in at 02:00 PM)
+  if (inHours !== null && inHours >= 13.5) { // 01:30 PM or later
+    return 'Half-Day';
+  }
+
+  return currentStatus || 'Present';
+}
+
 // Employee Clock-In
 exports.clockIn = async (req, res) => {
   try {
     const userId = req.user._id;
     const dateStr = formatDateStr();
-    const currentTime = req.body.checkInTime || '10:00 AM';
+    const currentTime = req.body.checkInTime || formatTimeNow();
 
     let record = await Store.findAttendanceRecord(userId, dateStr);
 
@@ -32,19 +84,21 @@ exports.clockIn = async (req, res) => {
       });
     }
 
+    const initialStatus = determineAttendanceStatus(currentTime, null, 'Present');
+
     record = await Store.upsertAttendance({
       userId,
       date: new Date(),
       dateStr,
       checkInTime: currentTime,
-      status: 'Present',
+      status: initialStatus,
       remarks: 'Self Clock-in',
       loggedBy: 'Self'
     });
 
     res.json({
       success: true,
-      message: `Clocked in successfully at ${currentTime}`,
+      message: `Clocked in successfully at ${currentTime}${initialStatus === 'Half-Day' ? ' (Half-Day)' : ''}`,
       record
     });
   } catch (error) {
@@ -57,9 +111,11 @@ exports.clockOut = async (req, res) => {
   try {
     const userId = req.user._id;
     const dateStr = formatDateStr();
-    const currentTime = req.body.checkOutTime || '06:00 PM';
+    const currentTime = req.body.checkOutTime || formatTimeNow();
 
     let record = await Store.findAttendanceRecord(userId, dateStr);
+    const effectiveIn = record?.checkInTime || '10:00 AM';
+    const computedStatus = determineAttendanceStatus(effectiveIn, currentTime, record?.status || 'Present');
 
     if (!record) {
       record = await Store.upsertAttendance({
@@ -68,7 +124,7 @@ exports.clockOut = async (req, res) => {
         dateStr,
         checkInTime: '10:00 AM',
         checkOutTime: currentTime,
-        status: 'Present',
+        status: computedStatus,
         remarks: 'Self Clock-out',
         loggedBy: 'Self'
       });
@@ -79,7 +135,7 @@ exports.clockOut = async (req, res) => {
         dateStr,
         checkInTime: record.checkInTime || '10:00 AM',
         checkOutTime: currentTime,
-        status: record.status || 'Present',
+        status: computedStatus,
         remarks: record.remarks || 'Self Clock-out',
         loggedBy: record.loggedBy || 'Self'
       });
@@ -87,7 +143,7 @@ exports.clockOut = async (req, res) => {
 
     res.json({
       success: true,
-      message: `Clocked out successfully at ${currentTime}`,
+      message: `Clocked out successfully at ${currentTime}. Status: ${computedStatus}`,
       record
     });
   } catch (error) {

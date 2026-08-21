@@ -494,8 +494,8 @@ export class MasterAttendanceComponent implements OnInit {
   }
 
   currentPage = 1;
-  pageSize = 50;
-  pageSizeOptions = [25, 50, 100, 200];
+  pageSize = 20;
+  pageSizeOptions = [10, 20, 50, 100];
   Math = Math;
 
   get totalPages(): number {

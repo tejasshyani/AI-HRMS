@@ -104,9 +104,7 @@ import { User } from '../../../models';
                       </span>
                     </div>
                     <div class="flex items-center gap-2 text-[10px] text-slate-400 font-mono">
-                      <span>ID: <strong class="text-slate-600">{{ emp.employeeId || '—' }}</strong></span>
-                      <span>•</span>
-                      <span>{{ emp.username }}</span>
+                      <span>ID: <strong class="text-slate-600">#{{ emp.employeeId || '—' }}</strong></span>
                     </div>
                   </div>
                 </td>
@@ -201,12 +199,12 @@ import { User } from '../../../models';
 
             <div class="grid grid-cols-2 gap-3">
               <div class="form-group mb-0">
-                <label class="form-label">Username <span class="text-rose-500">*</span></label>
-                <input type="text" [(ngModel)]="modalData.username" name="mUsername" [disabled]="isEditing" required placeholder="e.g. maulik" class="form-control text-xs">
-              </div>
-              <div class="form-group mb-0">
                 <label class="form-label">Email Address <span class="text-rose-500">*</span></label>
                 <input type="email" [(ngModel)]="modalData.email" name="mEmail" required placeholder="e.g. maulik@gmail.com" class="form-control text-xs">
+              </div>
+              <div class="form-group mb-0">
+                <label class="form-label">Phone Number</label>
+                <input type="text" [(ngModel)]="modalData.phone" name="mPhone" placeholder="e.g. +91 98765 43210" class="form-control text-xs">
               </div>
             </div>
 
@@ -232,15 +230,9 @@ import { User } from '../../../models';
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3" *ngIf="!isEditing">
-              <div class="form-group mb-0">
-                <label class="form-label">Initial Password</label>
-                <input type="password" [(ngModel)]="modalData.password" name="mPassword" placeholder="Default: FinGoal@123" class="form-control text-xs">
-              </div>
-              <div class="form-group mb-0">
-                <label class="form-label">Phone</label>
-                <input type="text" [(ngModel)]="modalData.phone" name="mPhone" placeholder="98765 43210" class="form-control text-xs">
-              </div>
+            <div class="form-group mb-0" *ngIf="!isEditing">
+              <label class="form-label">Initial Password</label>
+              <input type="password" [(ngModel)]="modalData.password" name="mPassword" placeholder="Default: FinGoal@123" class="form-control text-xs">
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -425,6 +417,10 @@ export class EmployeeDirectoryComponent implements OnInit {
   }
 
   saveModalData() {
+    if (!this.modalData.username) {
+      this.modalData.username = (this.modalData.email || '').split('@')[0];
+    }
+
     if (this.isEditing) {
       this.employeeService.updateEmployee(this.modalData._id, this.modalData).subscribe({
         next: (res) => {

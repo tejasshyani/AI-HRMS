@@ -32,28 +32,15 @@ import { AppLogoComponent } from '../../components/logo/app-logo.component';
 
           <form (ngSubmit)="onRegister()" class="space-y-4">
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              <div class="form-group mb-0">
-                <label class="form-label">Full Name <span class="text-rose-500">*</span></label>
-                <input 
-                  type="text" 
-                  [(ngModel)]="formData.fullName" 
-                  name="fullName" 
-                  required 
-                  placeholder="e.g. Rahul Sharma" 
-                  class="form-control text-sm">
-              </div>
-
-              <div class="form-group mb-0">
-                <label class="form-label">Username <span class="text-rose-500">*</span></label>
-                <input 
-                  type="text" 
-                  [(ngModel)]="formData.username" 
-                  name="username" 
-                  required 
-                  placeholder="e.g. rahul" 
-                  class="form-control text-sm">
-              </div>
+            <div class="form-group mb-0">
+              <label class="form-label">Full Name <span class="text-rose-500">*</span></label>
+              <input 
+                type="text" 
+                [(ngModel)]="formData.fullName" 
+                name="fullName" 
+                required 
+                placeholder="e.g. Rahul Sharma" 
+                class="form-control text-sm">
             </div>
 
             <div class="form-group mb-0">
@@ -150,6 +137,10 @@ export class RegisterComponent {
     if (!this.formData.fullName || !this.formData.email || !this.formData.password) {
       this.toast.error('Please fill in all required fields.');
       return;
+    }
+
+    if (!this.formData.username) {
+      this.formData.username = (this.formData.email || '').split('@')[0];
     }
 
     this.loading = true;

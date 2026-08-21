@@ -338,14 +338,15 @@ export class EmployeeDashboardComponent implements OnInit {
         this.myAttendance = res.records || [];
         this.presentDaysCount = this.myAttendance.filter(r => r.status === 'Present').length;
         
-        const todayStr = new Date().toISOString().split('T')[0];
+        const d = new Date();
+        const todayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         const todayRec = this.myAttendance.find(r => r.dateStr === todayStr);
         if (todayRec) {
-          if (todayRec.checkInTime) {
+          if (todayRec.checkInTime && todayRec.checkInTime !== '—') {
             this.todayCheckedIn = true;
             this.checkInTime = todayRec.checkInTime;
           }
-          if (todayRec.checkOutTime) {
+          if (todayRec.checkOutTime && todayRec.checkOutTime !== '—') {
             this.todayCheckedOut = true;
             this.checkOutTime = todayRec.checkOutTime;
           }

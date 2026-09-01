@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="1.8"
+        android:scaleY="1.8"
+        android:translateX="7.2"
+        android:translateY="14.4">
+
+        <!-- Vertical Pillar -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M 14.75,11 L 14.75,11 A 2.75,2.75 0 0,1 17.5,13.75 L 17.5,34.25 A 2.75,2.75 0 0,1 14.75,37 A 2.75,2.75 0 0,1 12,34.25 L 12,13.75 A 2.75,2.75 0 0,1 14.75,11 Z" />
+
+        <!-- Top Velocity Wing (Cyan) -->
+        <path
+            android:pathData="M 12,13.75 C 12,12.23 13.23,11 14.75,11 L 30.5,11 C 32.16,11 33.5,12.34 33.5,14 C 33.5,15.66 32.16,17 30.5,17 L 17.5,17 L 12,17 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:startX="12"
+                    android:startY="11"
+                    android:endX="33.5"
+                    android:endY="17"
+                    android:type="linear">
+                    <item android:offset="0.0" android:color="#FF38BDF8" />
+                    <item android:offset="1.0" android:color="#FF06B6D4" />
+                </gradient>
+            </aapt:attr>
+        </path>
+
+        <!-- Mid Financial Growth Wing (Pure White) -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.95"
+            android:pathData="M 20.25,21.5 L 27.75,21.5 A 2.75,2.75 0 0,1 30.5,24.25 A 2.75,2.75 0 0,1 27.75,27 L 20.25,27 A 2.75,2.75 0 0,1 17.5,24.25 A 2.75,2.75 0 0,1 20.25,21.5 Z" />
+
+        <!-- Goal Spark (Top-Right Radiant Diamond) -->
+        <path
+            android:pathData="M 35,7 L 36.3,10.7 L 40,12 L 36.3,13.3 L 35,17 L 33.7,13.3 L 30,12 L 33.7,10.7 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:startX="30"
+                    android:startY="7"
+                    android:endX="40"
+                    android:endY="17"
+                    android:type="linear">
+                    <item android:offset="0.0" android:color="#FFFDE047" />
+                    <item android:offset="1.0" android:color="#FFF59E0B" />
+                </gradient>
+            </aapt:attr>
+        </path>
+
+        <!-- Bottom-Right Target Dot Outer -->
+        <path
+            android:pathData="M 34,29.5 A 3.5,3.5 0 1,1 33.99,29.5 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:startX="30.5"
+                    android:startY="29.5"
+                    android:endX="37.5"
+                    android:endY="36.5"
+                    android:type="linear">
+                    <item android:offset="0.0" android:color="#FFFDE047" />
+                    <item android:offset="1.0" android:color="#FFF59E0B" />
+                </gradient>
+            </aapt:attr>
+        </path>
+
+        <!-- Bottom-Right Target Dot Inner -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M 34,31.5 A 1.5,1.5 0 1,1 33.99,31.5 Z" />
+
+    </group>
+</vector>

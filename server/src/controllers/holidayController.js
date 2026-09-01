@@ -13,6 +13,13 @@ exports.getAllHolidays = async (req, res) => {
       });
     }
 
+    // Sort ascending by date
+    holidays.sort((a, b) => {
+      const da = a.dateStr || (a.date ? new Date(a.date).toISOString().split('T')[0] : '');
+      const db = b.dateStr || (b.date ? new Date(b.date).toISOString().split('T')[0] : '');
+      return da.localeCompare(db);
+    });
+
     res.json({
       success: true,
       count: holidays.length,
@@ -23,17 +30,23 @@ exports.getAllHolidays = async (req, res) => {
   }
 };
 
-// Get upcoming holidays for widgets & cards
+// Get upcoming holidays for widgets & cards (today onwards)
 exports.getUpcomingHolidays = async (req, res) => {
   try {
     const holidays = await Store.findHolidays();
-    const todayStr = new Date().toISOString().split('T')[0];
+    const d = new Date();
+    const todayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-    // Get upcoming or all 2026 holidays
+    // Get upcoming holidays from today onwards
     const upcoming = holidays
       .filter(h => {
         const dStr = h.dateStr || (h.date ? new Date(h.date).toISOString().split('T')[0] : '');
-        return dStr >= todayStr || dStr.startsWith('2026-');
+        return dStr >= todayStr;
+      })
+      .sort((a, b) => {
+        const da = a.dateStr || (a.date ? new Date(a.date).toISOString().split('T')[0] : '');
+        const db = b.dateStr || (b.date ? new Date(b.date).toISOString().split('T')[0] : '');
+        return da.localeCompare(db);
       })
       .slice(0, 6);
 

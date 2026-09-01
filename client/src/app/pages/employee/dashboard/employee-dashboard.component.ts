@@ -40,8 +40,8 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
               </p>
               <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 mt-1.5">
                 <span class="truncate max-w-[220px]"><i class="fa-regular fa-envelope mr-1 text-slate-400"></i>{{ authService.currentUser()?.email }}</span>
-                <span class="hidden sm:inline">•</span>
-                <span><i class="fa-solid fa-indian-rupee-sign mr-1 text-blue-600"></i>Base: ₹{{ (authService.currentUser()?.baseSalary || 50000).toLocaleString() }}/mo</span>
+                <span class="hidden sm:inline">�</span>
+                <span><i class="fa-solid fa-indian-rupee-sign mr-1 text-blue-600"></i>Base: ?{{ (authService.currentUser()?.baseSalary || 50000).toLocaleString() }}/mo</span>
               </div>
             </div>
           </div>
@@ -109,10 +109,10 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
       <!-- KPI Summary Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        <!-- Card 1: Days Present -->
+        <!-- Card 1: Days Present (Current Month) -->
         <div class="card p-5 flex items-center justify-between">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Days Present (This Month)</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Days Present ({{ currentMonthName }})</span>
             <div class="text-2xl font-black text-slate-900 mt-1">{{ presentDaysCount }} <span class="text-xs font-semibold text-slate-400">Days</span></div>
             <div class="text-[11px] text-emerald-600 font-bold mt-1">
               <i class="fa-solid fa-circle-check mr-1"></i>Logged in System
@@ -128,10 +128,10 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Upcoming Holiday</span>
             <div class="text-base font-extrabold text-slate-900 mt-1 truncate max-w-[140px]">
-              {{ upcomingHolidays.length > 0 ? upcomingHolidays[0].title : 'None Added' }}
+              {{ upcomingHolidays.length > 0 ? upcomingHolidays[0].title : 'None This Month' }}
             </div>
             <div class="text-[11px] text-blue-600 font-bold mt-1">
-              {{ upcomingHolidays.length > 0 ? upcomingHolidays[0].dateStr : 'Add via Holiday Manager' }}
+              {{ upcomingHolidays.length > 0 ? upcomingHolidays[0].dateStr : 'No upcoming holidays' }}
             </div>
           </div>
           <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg shadow-xs">
@@ -155,8 +155,8 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
         <div class="card p-5 flex items-center justify-between">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Base Monthly Salary</span>
-            <div class="text-2xl font-black text-slate-900 mt-1">₹{{ (authService.currentUser()?.baseSalary || 50000).toLocaleString() }}</div>
-            <div class="text-[11px] text-purple-600 font-bold mt-1">Rate: ₹{{ getPerDayRate() }}/day</div>
+            <div class="text-2xl font-black text-slate-900 mt-1">?{{ (authService.currentUser()?.baseSalary || 50000).toLocaleString() }}</div>
+            <div class="text-[11px] text-purple-600 font-bold mt-1">Rate: ?{{ getPerDayRate() }}/day</div>
           </div>
           <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg shadow-xs">
             <i class="fa-solid fa-wallet"></i>
@@ -176,7 +176,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                 <h3 class="text-base font-bold text-slate-900">My Attendance Logs</h3>
                 <p class="text-xs text-slate-400">Your recent biometric and daily check-ins</p>
               </div>
-              <a routerLink="/employee/attendance-log" class="text-xs text-blue-600 font-bold hover:underline">Log Attendance →</a>
+              <a routerLink="/employee/attendance-log" class="text-xs text-blue-600 font-bold hover:underline">Log Attendance ?</a>
             </div>
 
             <div class="overflow-x-auto">
@@ -203,8 +203,8 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                   <ng-container *ngIf="!isLoading">
                     <tr *ngFor="let rec of myAttendance" class="hover:bg-slate-50/60 transition-colors">
                       <td class="py-3 font-mono font-bold text-slate-800">{{ rec.dateStr }}</td>
-                      <td class="py-3 font-mono text-slate-700">{{ rec.checkInTime || '—' }}</td>
-                      <td class="py-3 font-mono text-slate-700">{{ rec.checkOutTime || '—' }}</td>
+                      <td class="py-3 font-mono text-slate-700">{{ rec.checkInTime || '-' }}</td>
+                      <td class="py-3 font-mono text-slate-700">{{ rec.checkOutTime || '-' }}</td>
                       <td class="py-3 text-right">
                         <span class="badge text-[10px]" [ngClass]="rec.status === 'Present' ? 'badge-present' : (rec.status === 'Half-Day' ? 'badge-halfday' : 'badge-absent')">
                           {{ rec.status }}
@@ -250,7 +250,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
             </div>
 
             <div *ngIf="upcomingHolidays.length === 0" class="text-center py-6 text-xs text-slate-400">
-              No holidays added yet. Switch to Admin profile to configure holidays!
+              No upcoming holidays remaining.
             </div>
           </div>
 
@@ -318,6 +318,7 @@ export class EmployeeDashboardComponent implements OnInit {
   checkInTime = '10:00 AM';
   checkOutTime = '06:00 PM';
   presentDaysCount = 0;
+  currentMonthName = 'This Month';
   upcomingHolidays: any[] = [];
   myAttendance: any[] = [];
   showPayslipModal = false;
@@ -329,7 +330,10 @@ export class EmployeeDashboardComponent implements OnInit {
     private holidayService: HolidayService,
     private payrollService: PayrollService,
     private toast: ToastService
-  ) {}
+  ) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    this.currentMonthName = months[new Date().getMonth()];
+  }
 
   ngOnInit() {
     this.authService.fetchCurrentUser().subscribe();
@@ -340,7 +344,13 @@ export class EmployeeDashboardComponent implements OnInit {
   loadUpcomingHolidays() {
     this.holidayService.getUpcomingHolidays().subscribe({
       next: (res) => {
-        this.upcomingHolidays = res.holidays || [];
+        const d = new Date();
+        const todayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const all = res.holidays || [];
+        // Only show upcoming/today holidays
+        this.upcomingHolidays = all
+          .filter((h: any) => (h.dateStr || '').localeCompare(todayStr) >= 0)
+          .sort((a: any, b: any) => (a.dateStr || '').localeCompare(b.dateStr || ''));
       }
     });
   }
@@ -350,17 +360,24 @@ export class EmployeeDashboardComponent implements OnInit {
     this.attendanceService.getMyAttendance().subscribe({
       next: (res) => {
         this.myAttendance = res.records || [];
-        this.presentDaysCount = this.myAttendance.filter(r => r.status === 'Present').length;
         
         const d = new Date();
+        const currentMonthPrefix = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        
+        // Count present days for the ACTIVE CURRENT MONTH only (e.g. 2026-09)
+        this.presentDaysCount = this.myAttendance.filter(r => 
+          (r.status === 'Present' || r.status === 'Late' || r.status === 'Half-Day' || r.status === 'Half Day') && 
+          r.dateStr?.startsWith(currentMonthPrefix)
+        ).length;
+        
         const todayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         const todayRec = this.myAttendance.find(r => r.dateStr === todayStr);
         if (todayRec) {
-          if (todayRec.checkInTime && todayRec.checkInTime !== '—') {
+          if (todayRec.checkInTime && todayRec.checkInTime !== '-') {
             this.todayCheckedIn = true;
             this.checkInTime = todayRec.checkInTime;
           }
-          if (todayRec.checkOutTime && todayRec.checkOutTime !== '—') {
+          if (todayRec.checkOutTime && todayRec.checkOutTime !== '-') {
             this.todayCheckedOut = true;
             this.checkOutTime = todayRec.checkOutTime;
           }

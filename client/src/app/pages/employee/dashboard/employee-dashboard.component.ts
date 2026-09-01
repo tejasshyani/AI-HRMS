@@ -38,9 +38,9 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
               <p class="text-xs text-slate-500 font-semibold mt-0.5">
                 {{ authService.currentUser()?.designation || 'Staff Member' }}
               </p>
-              <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-slate-400 mt-1.5">
+              <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400 mt-1.5">
                 <span class="truncate max-w-[220px]"><i class="fa-regular fa-envelope mr-1 text-slate-400"></i>{{ authService.currentUser()?.email }}</span>
-                <span class="hidden sm:inline text-slate-300 font-bold">•</span>
+                <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-300 mx-1"></span>
                 <span><i class="fa-solid fa-indian-rupee-sign mr-1 text-blue-600"></i>Base: &#8377;{{ (authService.currentUser()?.baseSalary || 50000).toLocaleString() }}/mo</span>
               </div>
             </div>
@@ -153,7 +153,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
 
       </div>
 
-      <!-- Main Section: My Attendance Records & Upcoming Holidays & Leave Cards -->
+      <!-- Main Section: My Attendance Records & Upcoming Holidays Widget -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Left 2 Cols: My Attendance History & Quick Logging -->
@@ -221,7 +221,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
           </div>
         </div>
 
-        <!-- Right Col: Holidays & Leave Balances -->
+        <!-- Right Col: Upcoming Holidays Widget -->
         <div class="space-y-6">
           
           <!-- Upcoming Holidays Widget -->
@@ -253,49 +253,6 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
             </div>
           </div>
 
-          <!-- Leave Balances Widget -->
-          <div class="card p-6 border border-slate-200">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-base font-bold text-slate-900">Leave Balances</h3>
-              <span class="text-xs text-slate-400 font-semibold">{{ currentYear }} Cycle</span>
-            </div>
-
-            <div class="space-y-3 text-xs">
-              <div class="flex items-center justify-between py-1">
-                <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                  <span class="font-semibold text-slate-700">Casual Leave</span>
-                </div>
-                <span class="font-mono font-bold text-slate-900">{{ String(casualLeavesUtilized).padStart(2, '0') }} / 12</span>
-              </div>
-              <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                <div class="bg-blue-500 h-full rounded-full" [style.width.%]="(casualLeavesUtilized / 12) * 100"></div>
-              </div>
-
-              <div class="flex items-center justify-between py-1 pt-2">
-                <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                  <span class="font-semibold text-slate-700">Sick Leave</span>
-                </div>
-                <span class="font-mono font-bold text-slate-900">00 / 06</span>
-              </div>
-              <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                <div class="bg-amber-500 h-full rounded-full" style="width: 0%"></div>
-              </div>
-
-              <div class="flex items-center justify-between py-1 pt-2">
-                <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                  <span class="font-semibold text-slate-700">Earned Leave</span>
-                </div>
-                <span class="font-mono font-bold text-slate-900">00 / 15</span>
-              </div>
-              <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                <div class="bg-emerald-500 h-full rounded-full" style="width: 0%"></div>
-              </div>
-            </div>
-          </div>
-
         </div>
 
       </div>
@@ -317,8 +274,6 @@ export class EmployeeDashboardComponent implements OnInit {
   checkInTime = '10:00 AM';
   checkOutTime = '06:00 PM';
   presentDaysCount = 0;
-  casualLeavesUtilized = 0;
-  casualLeavesRemaining = 12;
   currentMonthName = 'September';
   currentYear = 2026;
   selectedFilter: 'current' | 'all' = 'current';
@@ -327,7 +282,6 @@ export class EmployeeDashboardComponent implements OnInit {
   displayedAttendance: any[] = [];
   showPayslipModal = false;
   payslipData: any = null;
-  String = String;
 
   constructor(
     public authService: AuthService,
@@ -379,13 +333,6 @@ export class EmployeeDashboardComponent implements OnInit {
           (r.status === 'Present' || r.status === 'Late' || r.status === 'Half-Day' || r.status === 'Half Day') && 
           r.dateStr?.startsWith(currentMonthPrefix)
         ).length;
-
-        // Calculate Casual Leaves used
-        this.casualLeavesUtilized = this.allAttendanceRecords.filter(r => 
-          (r.status === 'Leave' || r.status === 'Absent') && 
-          r.dateStr?.startsWith(String(this.currentYear))
-        ).length;
-        this.casualLeavesRemaining = Math.max(0, 12 - this.casualLeavesUtilized);
 
         // Apply display filter
         this.applyFilter();

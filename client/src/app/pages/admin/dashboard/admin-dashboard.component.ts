@@ -83,7 +83,7 @@ import { ToastService } from '../../../services/toast.service';
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Net Payroll</span>
             <div class="text-2xl font-black text-slate-900 mt-1">
-              ₹{{ totalPayrollAmount.toLocaleString() }}
+              &#8377;{{ totalPayrollAmount.toLocaleString() }}
             </div>
             <div class="text-[11px] text-purple-600 font-bold mt-1">Computed Payout</div>
           </div>

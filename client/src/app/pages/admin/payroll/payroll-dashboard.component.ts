@@ -54,7 +54,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
               <span class="text-xs font-bold text-slate-400">Total Net Payroll</span>
             </div>
             <div class="text-xl font-black text-slate-900 font-mono">
-              ₹{{ (analytics?.lastSalaryProcessed || 0).toLocaleString() }}
+              &#8377;{{ (analytics?.lastSalaryProcessed || 0).toLocaleString() }}
             </div>
             <div class="flex items-center gap-2 text-[11px] font-semibold mt-1 text-slate-400">
               <span>Flat Payout</span>
@@ -307,7 +307,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                   </td>
 
                   <td class="py-2.5 px-2 font-bold font-mono text-slate-800">
-                    ₹{{ item.salaryAmount?.toLocaleString() }}
+                    &#8377;{{ item.salaryAmount?.toLocaleString() }}
                   </td>
 
                   <td class="py-2.5 px-2 text-center font-mono font-bold text-blue-700">
@@ -315,28 +315,28 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                   </td>
 
                   <td class="py-2.5 px-2 font-mono text-slate-600">
-                    ₹{{ item.perDayRate?.toLocaleString() }}
+                    &#8377;{{ item.perDayRate?.toLocaleString() }}
                   </td>
 
                   <!-- Earned Pay (Payable Days × Per-Day Rate) -->
                   <td class="py-2.5 px-2 font-bold font-mono text-blue-700">
-                    ₹{{ getWorkingDaysAmount(item).toLocaleString() }}
+                    &#8377;{{ getWorkingDaysAmount(item).toLocaleString() }}
                   </td>
 
                   <td class="py-2.5 px-2 font-mono font-bold" [ngClass]="item.leaveDeduction > 0 ? 'text-rose-600' : 'text-slate-400'">
-                    ₹{{ item.leaveDeduction?.toLocaleString() }}
+                    &#8377;{{ item.leaveDeduction?.toLocaleString() }}
                   </td>
 
                   <td class="py-2.5 px-2 font-mono text-slate-800">
-                    ₹{{ (item.totalLoanDisbursed || 0)?.toLocaleString() }}
+                    &#8377;{{ (item.totalLoanDisbursed || 0)?.toLocaleString() }}
                   </td>
 
                   <td class="py-2.5 px-2 font-mono font-bold" [ngClass]="item.totalIncentive > 0 ? 'text-emerald-700' : 'text-slate-400'">
-                    + ₹{{ (item.totalIncentive || 0)?.toLocaleString() }}
+                    + &#8377;{{ (item.totalIncentive || 0)?.toLocaleString() }}
                   </td>
 
                   <td class="py-2.5 px-2 font-black font-mono text-emerald-700">
-                    ₹{{ item.netPayable?.toLocaleString() }}
+                    &#8377;{{ item.netPayable?.toLocaleString() }}
                   </td>
 
                   <td class="py-2.5 px-2 text-right">

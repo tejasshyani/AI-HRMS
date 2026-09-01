@@ -74,7 +74,7 @@ import { User } from '../../../models';
                 <th class="py-3 px-3">Employee</th>
                 <th class="py-3 px-3">Designation</th>
                 <th class="py-3 px-3">Contact</th>
-                <th class="py-3 px-3">Base Monthly Salary (₹)</th>
+                <th class="py-3 px-3">Base Monthly Salary (&#8377;)</th>
                 <th class="py-3 px-3 text-center">Status</th>
                 <th class="py-3 px-3 text-right">Actions</th>
               </tr>
@@ -132,7 +132,7 @@ import { User } from '../../../models';
                   <!-- Base Salary Rate config input (Employees only) -->
                   <td class="py-3.5 px-3">
                     <div *ngIf="emp.role === 'employee'" class="flex items-center gap-1.5">
-                      <span class="text-slate-500 font-bold text-xs">₹</span>
+                      <span class="text-slate-500 font-bold text-xs">&#8377;</span>
                       <input 
                         type="number" 
                         [(ngModel)]="emp.baseSalary" 
@@ -265,7 +265,7 @@ import { User } from '../../../models';
             </div>
 
             <div class="form-group mb-0">
-              <label class="form-label">Base Monthly Salary (₹) <span class="text-rose-500">*</span></label>
+              <label class="form-label">Base Monthly Salary (&#8377;) <span class="text-rose-500">*</span></label>
               <input type="number" [(ngModel)]="modalData.baseSalary" name="mSalary" required class="form-control text-xs font-mono">
             </div>
 

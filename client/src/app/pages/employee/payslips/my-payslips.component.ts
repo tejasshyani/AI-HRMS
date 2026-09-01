@@ -88,19 +88,19 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                     {{ slip.payableDays }}d
                   </td>
                   
-                  <td class="py-3 px-2 font-mono text-slate-800 font-bold">₹{{ slip.baseSalary?.toLocaleString() }}</td>
+                  <td class="py-3 px-2 font-mono text-slate-800 font-bold">&#8377;{{ slip.baseSalary?.toLocaleString() }}</td>
                   
-                  <td class="py-3 px-2 font-mono text-slate-500">₹{{ slip.perDayRate?.toLocaleString() }}/d</td>
+                  <td class="py-3 px-2 font-mono text-slate-500">&#8377;{{ slip.perDayRate?.toLocaleString() }}/d</td>
                   
                   <td class="py-3 px-2 font-mono font-bold" [ngClass]="slip.leaveDeduction > 0 ? 'text-rose-600' : 'text-slate-400'">
-                    ₹{{ slip.leaveDeduction?.toLocaleString() }}
+                    &#8377;{{ slip.leaveDeduction?.toLocaleString() }}
                   </td>
 
                   <td class="py-3 px-2 font-mono font-bold" [ngClass]="slip.totalIncentive > 0 ? 'text-emerald-700' : 'text-slate-400'">
-                    + ₹{{ (slip.totalIncentive || slip.allowances?.incentive || 0)?.toLocaleString() }}
+                    + &#8377;{{ (slip.totalIncentive || slip.allowances?.incentive || 0)?.toLocaleString() }}
                   </td>
                   
-                  <td class="py-3 px-2 font-mono font-black text-sm text-emerald-700">₹{{ slip.netSalary?.toLocaleString() }}</td>
+                  <td class="py-3 px-2 font-mono font-black text-sm text-emerald-700">&#8377;{{ slip.netSalary?.toLocaleString() }}</td>
                   
                   <td class="py-3 px-2 text-center">
                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-[9px] whitespace-nowrap"

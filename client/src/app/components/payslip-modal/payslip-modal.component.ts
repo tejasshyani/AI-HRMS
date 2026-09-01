@@ -65,7 +65,7 @@ import { AppLogoComponent } from '../logo/app-logo.component';
             </div>
             <div>
               <span class="text-slate-400 font-medium">Base Monthly Salary:</span>
-              <div class="font-bold text-slate-900 mt-0.5 font-mono">₹{{ payslip?.baseSalary?.toLocaleString() }}</div>
+              <div class="font-bold text-slate-900 mt-0.5 font-mono">&#8377;{{ payslip?.baseSalary?.toLocaleString() }}</div>
             </div>
           </div>
 
@@ -73,7 +73,7 @@ import { AppLogoComponent } from '../logo/app-logo.component';
           <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
             <div class="bg-slate-100/70 px-4 py-2 font-bold text-slate-700 border-b border-slate-200 flex justify-between items-center">
               <span>Attendance & Payroll Summary (Fixed 30-Day Basis)</span>
-              <span class="text-blue-700 font-mono">Per-Day Rate: ₹{{ payslip?.perDayRate?.toLocaleString() }}/day</span>
+              <span class="text-blue-700 font-mono">Per-Day Rate: &#8377;{{ payslip?.perDayRate?.toLocaleString() }}/day</span>
             </div>
             <div class="grid grid-cols-3 sm:grid-cols-6 divide-x divide-y sm:divide-y-0 divide-slate-200 bg-white text-center py-2">
               <div class="p-2">
@@ -110,12 +110,12 @@ import { AppLogoComponent } from '../logo/app-logo.component';
             <div class="border border-slate-200 rounded-xl overflow-hidden">
               <div class="bg-emerald-50 text-emerald-900 font-bold px-4 py-2 border-b border-emerald-100 flex justify-between">
                 <span>Monthly Earnings</span>
-                <span>Amount (₹)</span>
+                <span>Amount (&#8377;)</span>
               </div>
               <div class="divide-y divide-slate-100 p-2 space-y-1">
                 <div class="flex justify-between py-1.5 px-2 text-slate-600">
                   <span>Base Monthly Salary</span>
-                  <span class="font-semibold text-slate-800 font-mono">₹{{ payslip?.baseSalary?.toLocaleString() }}</span>
+                  <span class="font-semibold text-slate-800 font-mono">&#8377;{{ payslip?.baseSalary?.toLocaleString() }}</span>
                 </div>
                 <div class="flex justify-between py-1.5 px-2 text-slate-600">
                   <span>Standard Working Days</span>
@@ -123,18 +123,18 @@ import { AppLogoComponent } from '../logo/app-logo.component';
                 </div>
                 <div class="flex justify-between py-1.5 px-2 text-slate-600">
                   <span>Per-Day Salary Rate</span>
-                  <span class="font-semibold text-slate-800 font-mono">₹{{ payslip?.perDayRate?.toLocaleString() }}</span>
+                  <span class="font-semibold text-slate-800 font-mono">&#8377;{{ payslip?.perDayRate?.toLocaleString() }}</span>
                 </div>
                 <div class="flex justify-between items-center py-1.5 px-2 text-emerald-700 bg-emerald-50/70 rounded" *ngIf="(payslip?.totalIncentive || payslip?.allowances?.incentive) > 0">
                   <div>
                     <span class="font-bold">Loan Sourcing Incentive</span>
-                    <span class="text-[10px] text-emerald-600 block">From ₹{{ (payslip?.totalLoanDisbursed || 0).toLocaleString() }} Disbursed</span>
+                    <span class="text-[10px] text-emerald-600 block">From &#8377;{{ (payslip?.totalLoanDisbursed || 0).toLocaleString() }} Disbursed</span>
                   </div>
-                  <span class="font-black font-mono text-emerald-700 text-sm">+ ₹{{ (payslip?.totalIncentive || payslip?.allowances?.incentive || 0).toLocaleString() }}</span>
+                  <span class="font-black font-mono text-emerald-700 text-sm">+ &#8377;{{ (payslip?.totalIncentive || payslip?.allowances?.incentive || 0).toLocaleString() }}</span>
                 </div>
                 <div class="flex justify-between py-1.5 px-2 font-bold text-emerald-800 bg-emerald-50/50 rounded mt-2">
                   <span>Gross Monthly Total</span>
-                  <span class="font-mono">₹{{ ((payslip?.baseSalary || 0) + (payslip?.totalIncentive || payslip?.allowances?.incentive || 0)).toLocaleString() }}</span>
+                  <span class="font-mono">&#8377;{{ ((payslip?.baseSalary || 0) + (payslip?.totalIncentive || payslip?.allowances?.incentive || 0)).toLocaleString() }}</span>
                 </div>
               </div>
             </div>
@@ -143,7 +143,7 @@ import { AppLogoComponent } from '../logo/app-logo.component';
             <div class="border border-slate-200 rounded-xl overflow-hidden">
               <div class="bg-rose-50 text-rose-900 font-bold px-4 py-2 border-b border-rose-100 flex justify-between">
                 <span>Leave Deductions</span>
-                <span>Amount (₹)</span>
+                <span>Amount (&#8377;)</span>
               </div>
               <div class="divide-y divide-slate-100 p-2 space-y-1">
                 <div class="flex justify-between py-1.5 px-2 text-slate-600">
@@ -158,11 +158,11 @@ import { AppLogoComponent } from '../logo/app-logo.component';
                 </div>
                 <div class="flex justify-between py-1.5 px-2 text-slate-600">
                   <span>Leave Deduction Rate</span>
-                  <span class="font-semibold text-rose-600 font-mono">₹{{ getLeaveDeductionAmount() }}</span>
+                  <span class="font-semibold text-rose-600 font-mono">&#8377;{{ getLeaveDeductionAmount() }}</span>
                 </div>
                 <div class="flex justify-between py-1.5 px-2 font-bold text-rose-800 bg-rose-50/50 rounded mt-2">
                   <span>Total Deductions (Leaves only)</span>
-                  <span class="font-mono">₹{{ getLeaveDeductionAmount() }}</span>
+                  <span class="font-mono">&#8377;{{ getLeaveDeductionAmount() }}</span>
                 </div>
               </div>
             </div>
@@ -173,11 +173,11 @@ import { AppLogoComponent } from '../logo/app-logo.component';
           <div class="p-5 rounded-xl bg-gradient-to-r from-blue-900 to-indigo-900 text-white flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
               <span class="text-xs uppercase tracking-wider text-blue-200 font-bold">Net Salary Payable</span>
-              <p class="text-xs text-blue-300 mt-0.5">Formula: Payable Days × Per-Day Rate (₹{{ payslip?.payableDays }} × ₹{{ payslip?.perDayRate }})</p>
+              <p class="text-xs text-blue-300 mt-0.5">Formula: Payable Days × Per-Day Rate (&#8377;{{ payslip?.payableDays }} × &#8377;{{ payslip?.perDayRate }})</p>
             </div>
             <div class="text-right">
               <div class="text-3xl font-black tracking-tight text-white font-mono">
-                ₹{{ payslip?.netSalary?.toLocaleString() }}
+                &#8377;{{ payslip?.netSalary?.toLocaleString() }}
               </div>
               <span class="text-[10px] text-emerald-300 font-semibold">● Paid in Full</span>
             </div>

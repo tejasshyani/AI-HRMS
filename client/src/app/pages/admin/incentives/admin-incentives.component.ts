@@ -37,7 +37,7 @@ import { IncentiveRecord, User } from '../../../models';
         <div class="card p-5 flex items-center justify-between border border-slate-200">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Loans Disbursed</span>
-            <div class="text-xl font-black text-slate-900 mt-1">₹{{ totalLoanAmount?.toLocaleString() }}</div>
+            <div class="text-xl font-black text-slate-900 mt-1">&#8377;{{ totalLoanAmount?.toLocaleString() }}</div>
             <div class="text-[11px] text-blue-600 font-bold mt-1">
               <i class="fa-solid fa-file-contract mr-1"></i>{{ records.length }} Total Contract(s)
             </div>
@@ -50,7 +50,7 @@ import { IncentiveRecord, User } from '../../../models';
         <div class="card p-5 flex items-center justify-between border border-slate-200">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Incentive Payout</span>
-            <div class="text-xl font-black text-emerald-700 mt-1">₹{{ totalIncentive?.toLocaleString() }}</div>
+            <div class="text-xl font-black text-emerald-700 mt-1">&#8377;{{ totalIncentive?.toLocaleString() }}</div>
             <div class="text-[11px] text-emerald-600 font-bold mt-1">
               <i class="fa-solid fa-coins mr-1"></i>To be paid via Payroll
             </div>
@@ -76,7 +76,7 @@ import { IncentiveRecord, User } from '../../../models';
         <div class="card p-5 flex items-center justify-between border border-slate-200 bg-gradient-to-br from-amber-50/50 to-orange-50/50">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Avg Incentive / Loan</span>
-            <div class="text-xl font-black text-amber-900 mt-1">₹{{ records.length > 0 ? (Math.round(totalIncentive / records.length)).toLocaleString() : '0' }}</div>
+            <div class="text-xl font-black text-amber-900 mt-1">&#8377;{{ records.length > 0 ? (Math.round(totalIncentive / records.length)).toLocaleString() : '0' }}</div>
             <div class="text-[11px] text-amber-700 font-medium mt-1">
               Across all tiers
             </div>
@@ -192,7 +192,7 @@ import { IncentiveRecord, User } from '../../../models';
 
                   <!-- Loan Amount -->
                   <td class="py-3.5 px-3 font-mono font-bold text-slate-900">
-                    ₹{{ rec.loanAmount?.toLocaleString() }}
+                    &#8377;{{ rec.loanAmount?.toLocaleString() }}
                   </td>
 
                   <!-- Slab Tier -->
@@ -205,7 +205,7 @@ import { IncentiveRecord, User } from '../../../models';
 
                   <!-- Incentive Amount -->
                   <td class="py-3.5 px-3 font-mono font-black text-sm text-emerald-700">
-                    ₹{{ rec.incentiveAmount?.toLocaleString() }}
+                    &#8377;{{ rec.incentiveAmount?.toLocaleString() }}
                   </td>
 
                   <!-- Source -->
@@ -303,11 +303,11 @@ import { IncentiveRecord, User } from '../../../models';
           <div class="p-3.5 rounded-xl bg-emerald-50/80 border border-emerald-200 flex items-center justify-between">
             <div>
               <span class="text-[10px] text-emerald-800 font-bold uppercase tracking-wider block">Disbursed Amount</span>
-              <div class="font-mono font-black text-slate-900 text-base">₹{{ selectedDetail.loanAmount?.toLocaleString() }}</div>
+              <div class="font-mono font-black text-slate-900 text-base">&#8377;{{ selectedDetail.loanAmount?.toLocaleString() }}</div>
             </div>
             <div class="text-right">
               <span class="text-[10px] text-emerald-800 font-bold uppercase tracking-wider block">Incentive ({{ selectedDetail.slabPercentage }}%)</span>
-              <div class="font-mono font-black text-emerald-700 text-base">+ ₹{{ selectedDetail.incentiveAmount?.toLocaleString() }}</div>
+              <div class="font-mono font-black text-emerald-700 text-base">+ &#8377;{{ selectedDetail.incentiveAmount?.toLocaleString() }}</div>
             </div>
           </div>
 
@@ -356,7 +356,7 @@ import { IncentiveRecord, User } from '../../../models';
             </div>
 
             <div class="form-group mb-0">
-              <label class="form-label text-xs">Total Loan Amount (₹) <span class="text-rose-500">*</span></label>
+              <label class="form-label text-xs">Total Loan Amount (&#8377;) <span class="text-rose-500">*</span></label>
               <input 
                 type="number" 
                 [(ngModel)]="newLoanData.loanAmount" 
@@ -375,7 +375,7 @@ import { IncentiveRecord, User } from '../../../models';
               </div>
               <div class="flex justify-between items-center text-blue-950 font-bold">
                 <span>Incentive Earned:</span>
-                <span class="text-sm font-black text-emerald-700 font-mono">+ ₹{{ modalPreview.incentiveAmount?.toLocaleString() }}</span>
+                <span class="text-sm font-black text-emerald-700 font-mono">+ &#8377;{{ modalPreview.incentiveAmount?.toLocaleString() }}</span>
               </div>
             </div>
 
@@ -587,7 +587,7 @@ export class AdminIncentivesComponent implements OnInit {
 
   deleteRecord(rec: IncentiveRecord) {
     if (!rec._id) return;
-    if (!confirm(`Are you sure you want to delete this loan record of ₹${rec.loanAmount?.toLocaleString()}?`)) {
+    if (!confirm(`Are you sure you want to delete this loan record of &#8377;${rec.loanAmount?.toLocaleString()}?`)) {
       return;
     }
     this.incentiveService.deleteIncentive(rec._id).subscribe({

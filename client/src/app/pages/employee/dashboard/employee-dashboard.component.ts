@@ -40,8 +40,8 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
               </p>
               <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 mt-1.5">
                 <span class="truncate max-w-[220px]"><i class="fa-regular fa-envelope mr-1 text-slate-400"></i>{{ authService.currentUser()?.email }}</span>
-                <span class="hidden sm:inline">•</span>
-                <span><i class="fa-solid fa-indian-rupee-sign mr-1 text-blue-600"></i>Base: ?{{ (authService.currentUser()?.baseSalary || 50000).toLocaleString() }}/mo</span>
+                <span class="hidden sm:inline">&#8377;</span>
+                <span><i class="fa-solid fa-indian-rupee-sign mr-1 text-blue-600"></i>Base: &#8377;{{ (authService.currentUser()?.baseSalary || 50000).toLocaleString() }}/mo</span>
               </div>
             </div>
           </div>
@@ -155,8 +155,8 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
         <div class="card p-5 flex items-center justify-between">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Base Monthly Salary</span>
-            <div class="text-2xl font-black text-slate-900 mt-1">?{{ (authService.currentUser()?.baseSalary || 50000).toLocaleString() }}</div>
-            <div class="text-[11px] text-purple-600 font-bold mt-1">Rate: ?{{ getPerDayRate() }}/day</div>
+            <div class="text-2xl font-black text-slate-900 mt-1">&#8377;{{ (authService.currentUser()?.baseSalary || 50000).toLocaleString() }}</div>
+            <div class="text-[11px] text-purple-600 font-bold mt-1">Rate: &#8377;{{ getPerDayRate() }}/day</div>
           </div>
           <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg shadow-xs">
             <i class="fa-solid fa-wallet"></i>

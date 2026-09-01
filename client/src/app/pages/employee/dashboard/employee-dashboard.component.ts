@@ -38,9 +38,9 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
               <p class="text-xs text-slate-500 font-semibold mt-0.5">
                 {{ authService.currentUser()?.designation || 'Staff Member' }}
               </p>
-              <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 mt-1.5">
+              <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-slate-400 mt-1.5">
                 <span class="truncate max-w-[220px]"><i class="fa-regular fa-envelope mr-1 text-slate-400"></i>{{ authService.currentUser()?.email }}</span>
-                <span class="hidden sm:inline">&#8377;</span>
+                <span class="hidden sm:inline text-slate-300 font-bold">•</span>
                 <span><i class="fa-solid fa-indian-rupee-sign mr-1 text-blue-600"></i>Base: &#8377;{{ (authService.currentUser()?.baseSalary || 50000).toLocaleString() }}/mo</span>
               </div>
             </div>
@@ -106,8 +106,8 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
 
       </div>
 
-      <!-- KPI Summary Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- KPI Summary Cards (3 Equally Distributed 1/3 Width Cards) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         
         <!-- Card 1: Days Present (Current Active Month) -->
         <div class="card p-5 flex items-center justify-between">
@@ -127,7 +127,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
         <div class="card p-5 flex items-center justify-between">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Upcoming Holiday</span>
-            <div class="text-base font-extrabold text-slate-900 mt-1 truncate max-w-[150px]">
+            <div class="text-base font-extrabold text-slate-900 mt-1 truncate max-w-[170px]">
               {{ upcomingHolidays.length > 0 ? upcomingHolidays[0].title : 'No Upcoming Holiday' }}
             </div>
             <div class="text-[11px] text-blue-600 font-bold mt-1">
@@ -139,19 +139,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
           </div>
         </div>
 
-        <!-- Card 3: Casual Leave Balance -->
-        <div class="card p-5 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Leave Balance</span>
-            <div class="text-2xl font-black text-slate-900 mt-1">{{ casualLeavesRemaining }} <span class="text-xs font-semibold text-slate-400">/ 12 Casual</span></div>
-            <div class="text-[11px] text-amber-600 font-bold mt-1">{{ casualLeavesUtilized }} Days Utilized</div>
-          </div>
-          <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shadow-xs">
-            <i class="fa-solid fa-plane-departure"></i>
-          </div>
-        </div>
-
-        <!-- Card 4: Base Salary -->
+        <!-- Card 3: Base Monthly Salary -->
         <div class="card p-5 flex items-center justify-between">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Base Monthly Salary</span>
@@ -183,7 +171,7 @@ import { PayslipModalComponent } from '../../../components/payslip-modal/payslip
                   <option value="current" [selected]="selectedFilter === 'current'">Current Month ({{ currentMonthName }})</option>
                   <option value="all" [selected]="selectedFilter === 'all'">All History</option>
                 </select>
-                <a routerLink="/employee/attendance-log" class="text-xs text-blue-600 font-bold hover:underline whitespace-nowrap ml-1">Log Attendance ?</a>
+                <a routerLink="/employee/attendance-log" class="text-xs text-blue-600 font-bold hover:underline whitespace-nowrap ml-1">Log Attendance &rarr;</a>
               </div>
             </div>
 

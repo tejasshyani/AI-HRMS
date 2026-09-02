@@ -378,8 +378,20 @@ export class EmployeeDashboardComponent implements OnInit {
     }
   }
 
+  getCurrentTimeStr(): string {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const hoursStr = String(hours).padStart(2, '0');
+    return `${hoursStr}:${minutes} ${ampm}`;
+  }
+
   onClockIn() {
-    this.attendanceService.clockIn().subscribe({
+    const localTime = this.getCurrentTimeStr();
+    this.attendanceService.clockIn({ checkInTime: localTime }).subscribe({
       next: (res) => {
         this.todayCheckedIn = true;
         this.checkInTime = res.record?.checkInTime || '10:00 AM';
@@ -393,7 +405,8 @@ export class EmployeeDashboardComponent implements OnInit {
   }
 
   onClockOut() {
-    this.attendanceService.clockOut({ checkOutTime: '06:00 PM' }).subscribe({
+    const localTime = this.getCurrentTimeStr();
+    this.attendanceService.clockOut({ checkOutTime: localTime }).subscribe({
       next: (res) => {
         this.todayCheckedOut = true;
         this.checkOutTime = res.record?.checkOutTime || '06:00 PM';

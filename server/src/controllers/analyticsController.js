@@ -4,7 +4,7 @@ exports.getOperationsDashboard = async (req, res) => {
   try {
     const users = await Store.findUsers({ isActive: true });
     const holidays = await Store.findHolidays();
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
     const todayRecords = await Store.findAttendance({ dateStr: todayStr });
 
     const presentCount = todayRecords.filter(r => r.status === 'Present').length;

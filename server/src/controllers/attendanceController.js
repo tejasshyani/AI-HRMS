@@ -1,18 +1,23 @@
 const Store = require('../utils/dataStore');
 
-// Format current time "HH:MM AM/PM"
-const formatTimeNow = () => {
-  const now = new Date();
-  return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+// Format current time "HH:MM AM/PM" strictly in Indian Standard Time (Asia/Kolkata)
+const formatTimeNow = (date = new Date()) => {
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  }).format(new Date(date));
 };
 
-// Format date "YYYY-MM-DD"
+// Format date "YYYY-MM-DD" strictly in Indian Standard Time (Asia/Kolkata)
 const formatDateStr = (date = new Date()) => {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).format(new Date(date));
 };
 
 // Helper to parse time string "HH:MM AM/PM" to decimal hours (e.g. "10:00 AM" -> 10.0, "02:00 PM" -> 14.0)

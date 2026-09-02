@@ -6,6 +6,8 @@
  * - Work Week: Monday to Saturday (10:00 AM – 06:00 PM)
  * - Half-Day Shift: 02:00 PM – 06:00 PM (0.5 Payable Day)
  * - Flat Salary Mode: Base Monthly Salary / 30 Days (Deductions strictly for unpaid leaves)
+ * - Paid Holidays: 100% Paid (National & Public Holidays, excluding Sundays)
+ * - Sundays: Weekly Off
  * - Loan Incentives Slabs:
  *     > 50 Lakhs: 0.50%
  *     > 40 Lakhs: 0.40%
@@ -59,19 +61,42 @@ function calculateEmployeePayroll({
   // Fixed 30-Day Per-Day Rate = Base Monthly Salary / 30
   const perDayRate = baseSalary / 30;
 
-  // Tally Attendance Records in that month
+  const monthStr = String(month).padStart(2, '0');
+  const monthPrefix = `${year}-${monthStr}`;
+
+  // 1. Identify Paid Holiday dates in this month (excluding Sundays)
+  const holidayDateSet = new Set();
+  holidayRecords.forEach(h => {
+    const hDateStr = h.dateStr || (h.date ? new Date(h.date).toISOString().split('T')[0] : '');
+    if (hDateStr && hDateStr.startsWith(monthPrefix)) {
+      const hDate = new Date(hDateStr);
+      if (hDate.getDay() !== 0) {
+        holidayDateSet.add(hDateStr);
+      }
+    }
+  });
+
+  const paidHolidays = holidayDateSet.size;
+
+  // 2. Tally Attendance Records in that month
+  // NOTE: Exclude Sundays and Holiday dates from Present/Half-day tally to prevent double counting
   let presentDays = 0;
   let halfDays = 0;
   let unpaidLeaves = 0;
 
-  const monthStr = String(month).padStart(2, '0');
-  const monthPrefix = `${year}-${monthStr}`;
-
   attendanceRecords.forEach(att => {
     if (att.dateStr && att.dateStr.startsWith(monthPrefix)) {
+      const d = new Date(att.dateStr);
+      const isSunday = d.getDay() === 0;
+      const isHoliday = holidayDateSet.has(att.dateStr);
+
+      if (isSunday || isHoliday) {
+        return; // Sundays are weekly offs, Holidays are counted under paidHolidays
+      }
+
       if (att.status === 'Present') {
         presentDays++;
-      } else if (att.status === 'Half-Day') {
+      } else if (att.status === 'Half-Day' || att.status === 'Half Day') {
         halfDays++;
       } else if (att.status === 'Absent' || att.status === 'Leave') {
         unpaidLeaves++;
@@ -79,27 +104,14 @@ function calculateEmployeePayroll({
     }
   });
 
-  // Count Paid Holidays in the month (excluding Sundays)
-  let paidHolidays = 0;
-  holidayRecords.forEach(h => {
-    const hDateStr = h.dateStr || (h.date ? new Date(h.date).toISOString().split('T')[0] : '');
-    if (hDateStr && hDateStr.startsWith(monthPrefix)) {
-      const hDate = new Date(hDateStr);
-      if (hDate.getDay() !== 0) {
-        paidHolidays++;
-      }
-    }
-  });
-
   const paidLeaves = approvedLeaves;
 
-  // Payable Days = Days Present + (0.5 * Half-Days) + Paid Holidays + Paid Leaves
+  // 3. Payable Days = Days Present + (0.5 * Half-Days) + Paid Holidays + Paid Leaves
   const rawPayableDays = presentDays + (0.5 * halfDays) + paidHolidays + paidLeaves;
   const payableDays = Math.min(rawPayableDays, standardDays);
 
-  // Tally Loan Disbursements for this month
+  // 4. Tally Loan Disbursements for this month
   let totalLoanDisbursed = 0;
-
   incentiveRecords.forEach(inc => {
     const incMonth = Number(inc.month);
     const incYear = Number(inc.year);
@@ -124,7 +136,7 @@ function calculateEmployeePayroll({
 
   const totalIncentive = Math.round((totalLoanDisbursed * slabPercentage) / 100);
 
-  // Flat 30-day calculation: Deduct ONLY for unpaid leaves
+  // Flat 30-day calculation: Deduct ONLY for unpaid leaves / absent days
   const baseEarned = Math.max(0, Math.round(payableDays * perDayRate));
   const leaveDeduction = Math.max(0, Math.round((standardDays - payableDays) * perDayRate));
   
@@ -134,7 +146,7 @@ function calculateEmployeePayroll({
 
   return {
     totalCalendarDays: 30,
-    totalSundays: 4,
+    totalSundays: 5,
     totalWorkingDays: 30,
     presentDays,
     halfDays,

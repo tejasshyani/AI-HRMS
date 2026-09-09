@@ -77,12 +77,8 @@ import { AppLogoComponent } from '../logo/app-logo.component';
             </div>
             <div class="grid grid-cols-3 sm:grid-cols-6 divide-x divide-y sm:divide-y-0 divide-slate-200 bg-white text-center py-2">
               <div class="p-2">
-                <div class="text-[10px] text-slate-400 font-medium">Month Days</div>
-                <div class="font-bold text-slate-800 text-sm mt-0.5">30</div>
-              </div>
-              <div class="p-2">
-                <div class="text-[10px] text-slate-400 font-medium">Standard Days</div>
-                <div class="font-bold text-slate-800 text-sm mt-0.5">{{ payslip?.totalWorkingDays || 30 }}</div>
+                <div class="text-[10px] text-slate-400 font-medium">Payment Cycle</div>
+                <div class="font-bold text-slate-800 text-sm mt-0.5">30 Days</div>
               </div>
               <div class="p-2">
                 <div class="text-[10px] text-emerald-600 font-medium">Present Days</div>
@@ -96,9 +92,13 @@ import { AppLogoComponent } from '../logo/app-logo.component';
                 <div class="text-[10px] text-blue-600 font-medium">Paid Holidays</div>
                 <div class="font-bold text-blue-700 text-sm mt-0.5">{{ payslip?.paidHolidays || 0 }}</div>
               </div>
-              <div class="p-2 bg-blue-50/50">
+              <div class="p-2 bg-rose-50/40">
+                <div class="text-[10px] text-rose-600 font-bold">Unpaid Leaves</div>
+                <div class="font-black text-rose-700 text-sm mt-0.5">{{ getUnpaidLeavesCount() }}d</div>
+              </div>
+              <div class="p-2 bg-blue-50/70">
                 <div class="text-[10px] text-blue-800 font-bold uppercase">Payable Days</div>
-                <div class="font-black text-blue-900 text-sm mt-0.5">{{ payslip?.payableDays }}</div>
+                <div class="font-black text-blue-900 text-sm mt-0.5">{{ payslip?.payableDays }}d</div>
               </div>
             </div>
           </div>
@@ -118,12 +118,16 @@ import { AppLogoComponent } from '../logo/app-logo.component';
                   <span class="font-semibold text-slate-800 font-mono">&#8377;{{ payslip?.baseSalary?.toLocaleString() }}</span>
                 </div>
                 <div class="flex justify-between py-1.5 px-2 text-slate-600">
-                  <span>Standard Working Days</span>
-                  <span class="font-semibold text-slate-800 font-mono">{{ payslip?.totalWorkingDays || 30 }} Days</span>
+                  <span>Standard Cycle Base</span>
+                  <span class="font-semibold text-slate-800 font-mono">30 Days</span>
                 </div>
                 <div class="flex justify-between py-1.5 px-2 text-slate-600">
                   <span>Per-Day Salary Rate</span>
                   <span class="font-semibold text-slate-800 font-mono">&#8377;{{ payslip?.perDayRate?.toLocaleString() }}</span>
+                </div>
+                <div class="flex justify-between py-1.5 px-2 font-bold text-emerald-900 bg-emerald-50/50 rounded">
+                  <span>Earned Basic ({{ payslip?.payableDays }}d)</span>
+                  <span class="font-mono">&#8377;{{ getEarnedBasicPay() }}</span>
                 </div>
                 <div class="flex justify-between items-center py-1.5 px-2 text-emerald-700 bg-emerald-50/70 rounded" *ngIf="(payslip?.totalIncentive || payslip?.allowances?.incentive) > 0">
                   <div>
@@ -132,7 +136,7 @@ import { AppLogoComponent } from '../logo/app-logo.component';
                   </div>
                   <span class="font-black font-mono text-emerald-700 text-sm">+ &#8377;{{ (payslip?.totalIncentive || payslip?.allowances?.incentive || 0).toLocaleString() }}</span>
                 </div>
-                <div class="flex justify-between py-1.5 px-2 font-bold text-emerald-800 bg-emerald-50/50 rounded mt-2">
+                <div class="flex justify-between py-1.5 px-2 font-bold text-emerald-800 bg-emerald-100/60 rounded mt-2">
                   <span>Gross Monthly Total</span>
                   <span class="font-mono">&#8377;{{ ((payslip?.baseSalary || 0) + (payslip?.totalIncentive || payslip?.allowances?.incentive || 0)).toLocaleString() }}</span>
                 </div>
@@ -147,17 +151,21 @@ import { AppLogoComponent } from '../logo/app-logo.component';
               </div>
               <div class="divide-y divide-slate-100 p-2 space-y-1">
                 <div class="flex justify-between py-1.5 px-2 text-slate-600">
+                  <span>Payment Cycle Base</span>
+                  <span class="font-semibold text-slate-800 font-mono">30 Days</span>
+                </div>
+                <div class="flex justify-between py-1.5 px-2 text-slate-600">
                   <span>Days Payable</span>
-                  <span class="font-semibold text-slate-800 font-mono">{{ payslip?.payableDays }} / {{ payslip?.totalWorkingDays }} Days</span>
+                  <span class="font-semibold text-slate-800 font-mono">{{ payslip?.payableDays }} / 30 Days</span>
                 </div>
                 <div class="flex justify-between py-1.5 px-2 text-slate-600">
                   <span>Unpaid Absences / Leaves</span>
                   <span class="font-semibold text-rose-600 font-mono">
-                    {{ (payslip?.totalWorkingDays - payslip?.payableDays) > 0 ? ((payslip?.totalWorkingDays - payslip?.payableDays).toFixed(1) + ' Days') : '0 Days' }}
+                    {{ getUnpaidLeavesCount() }} Days
                   </span>
                 </div>
                 <div class="flex justify-between py-1.5 px-2 text-slate-600">
-                  <span>Leave Deduction Rate</span>
+                  <span>Leave Deduction ({{ getUnpaidLeavesCount() }}d × &#8377;{{ payslip?.perDayRate }})</span>
                   <span class="font-semibold text-rose-600 font-mono">&#8377;{{ getLeaveDeductionAmount() }}</span>
                 </div>
                 <div class="flex justify-between py-1.5 px-2 font-bold text-rose-800 bg-rose-50/50 rounded mt-2">
@@ -173,7 +181,12 @@ import { AppLogoComponent } from '../logo/app-logo.component';
           <div class="p-5 rounded-xl bg-gradient-to-r from-blue-900 to-indigo-900 text-white flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
               <span class="text-xs uppercase tracking-wider text-blue-200 font-bold">Net Salary Payable</span>
-              <p class="text-xs text-blue-300 mt-0.5">Formula: Payable Days × Per-Day Rate (&#8377;{{ payslip?.payableDays }} × &#8377;{{ payslip?.perDayRate }})</p>
+              <p class="text-xs text-blue-200 mt-0.5" *ngIf="(payslip?.totalIncentive || payslip?.allowances?.incentive) > 0">
+                Formula: Earned Pay ({{ payslip?.payableDays }}d × &#8377;{{ payslip?.perDayRate }}) + Incentive (&#8377;{{ (payslip?.totalIncentive || payslip?.allowances?.incentive || 0).toLocaleString() }})
+              </p>
+              <p class="text-xs text-blue-200 mt-0.5" *ngIf="!(payslip?.totalIncentive || payslip?.allowances?.incentive)">
+                Formula: Payable Days × Per-Day Rate ({{ payslip?.payableDays }} Days × &#8377;{{ payslip?.perDayRate }})
+              </p>
             </div>
             <div class="text-right">
               <div class="text-3xl font-black tracking-tight text-white font-mono">
@@ -203,12 +216,27 @@ export class PayslipModalComponent {
     window.print();
   }
 
+  getUnpaidLeavesCount(): string {
+    if (!this.payslip) return '0';
+    const totalWorkingDays = 30;
+    const payableDays = this.payslip.payableDays !== undefined ? this.payslip.payableDays : totalWorkingDays;
+    const leaveDays = Math.max(0, totalWorkingDays - payableDays);
+    return leaveDays % 1 === 0 ? leaveDays.toString() : leaveDays.toFixed(1);
+  }
+
+  getEarnedBasicPay(): string {
+    if (!this.payslip) return '0';
+    const payableDays = this.payslip.payableDays !== undefined ? this.payslip.payableDays : 30;
+    const perDayRate = this.payslip.perDayRate || (this.payslip.baseSalary / 30);
+    return Math.max(0, Math.round(payableDays * perDayRate)).toLocaleString();
+  }
+
   getLeaveDeductionAmount(): string {
     if (!this.payslip) return '0';
     if (this.payslip.leaveDeduction != null) {
       return Number(this.payslip.leaveDeduction).toLocaleString();
     }
-    const workingDays = this.payslip.totalWorkingDays || 30;
+    const workingDays = 30;
     const payableDays = this.payslip.payableDays !== undefined ? this.payslip.payableDays : workingDays;
     const perDayRate = this.payslip.perDayRate || (this.payslip.baseSalary / 30);
     const deduction = Math.max(0, Math.round((workingDays - payableDays) * perDayRate));

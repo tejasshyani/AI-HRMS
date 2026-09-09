@@ -99,78 +99,76 @@ import { AppLogoComponent } from '../logo/app-logo.component';
             </div>
           </div>
 
-          <!-- Flat Salary & Leave Deduction Table -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
-            
-            <!-- Earnings -->
-            <div class="border border-slate-200 rounded-xl overflow-hidden">
-              <div class="bg-emerald-50 text-emerald-900 font-bold px-4 py-2 border-b border-emerald-100 flex justify-between">
-                <span>Monthly Earnings</span>
-                <span>Amount (&#8377;)</span>
-              </div>
-              <div class="divide-y divide-slate-100 p-2 space-y-1">
-                <div class="flex justify-between py-1.5 px-2 text-slate-600">
-                  <span>Base Monthly Salary</span>
-                  <span class="font-semibold text-slate-800 font-mono">&#8377;{{ payslip?.baseSalary?.toLocaleString() }}</span>
-                </div>
-                <div class="flex justify-between py-1.5 px-2 text-slate-600">
-                  <span>Standard Cycle Base</span>
-                  <span class="font-semibold text-slate-800 font-mono">30 Days</span>
-                </div>
-                <div class="flex justify-between py-1.5 px-2 text-slate-600">
-                  <span>Per-Day Salary Rate</span>
-                  <span class="font-semibold text-slate-800 font-mono">&#8377;{{ payslip?.perDayRate?.toLocaleString() }}</span>
-                </div>
-                <div class="flex justify-between py-1.5 px-2 font-bold text-emerald-900 bg-emerald-50/50 rounded">
-                  <span>Earned Basic ({{ payslip?.payableDays }}d)</span>
-                  <span class="font-mono">&#8377;{{ getEarnedBasicPay() }}</span>
-                </div>
-                <div class="flex justify-between items-center py-1.5 px-2 text-emerald-700 bg-emerald-50/70 rounded" *ngIf="(payslip?.totalIncentive || payslip?.allowances?.incentive) > 0">
-                  <div>
-                    <span class="font-bold">Loan Sourcing Incentive</span>
-                    <span class="text-[10px] text-emerald-600 block">From &#8377;{{ (payslip?.totalLoanDisbursed || 0).toLocaleString() }} Disbursed</span>
-                  </div>
-                  <span class="font-black font-mono text-emerald-700 text-sm">+ &#8377;{{ (payslip?.totalIncentive || payslip?.allowances?.incentive || 0).toLocaleString() }}</span>
-                </div>
-                <div class="flex justify-between py-1.5 px-2 font-bold text-emerald-800 bg-emerald-100/60 rounded mt-2">
-                  <span>Gross Monthly Total</span>
-                  <span class="font-mono">&#8377;{{ ((payslip?.baseSalary || 0) + (payslip?.totalIncentive || payslip?.allowances?.incentive || 0)).toLocaleString() }}</span>
-                </div>
-              </div>
-            </div>
+          <!-- Single Unified Salary Breakdown Table -->
+          <div class="border border-slate-200 rounded-xl overflow-hidden text-xs shadow-2xs bg-white">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="bg-slate-100/80 text-slate-700 font-bold border-b border-slate-200 text-left">
+                  <th class="py-3 px-4">Salary Component</th>
+                  <th class="py-3 px-4 text-center">Calculation Basis</th>
+                  <th class="py-3 px-4 text-right">Amount (&#8377;)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-medium">
+                
+                <!-- 1. Base Monthly Salary -->
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                  <td class="py-3 px-4">
+                    <div class="font-bold text-slate-900 text-sm">Base Monthly Salary</div>
+                    <div class="text-[10px] text-slate-400">Fixed rate of &#8377;{{ payslip?.perDayRate?.toLocaleString() }}/day (30-Day Cycle)</div>
+                  </td>
+                  <td class="py-3 px-4 text-center font-mono text-slate-600 font-semibold">
+                    30 Days
+                  </td>
+                  <td class="py-3 px-4 text-right font-mono font-bold text-slate-900 text-sm">
+                    &#8377;{{ payslip?.baseSalary?.toLocaleString() }}
+                  </td>
+                </tr>
 
-            <!-- Deductions (Only for Leaves) -->
-            <div class="border border-slate-200 rounded-xl overflow-hidden">
-              <div class="bg-rose-50 text-rose-900 font-bold px-4 py-2 border-b border-rose-100 flex justify-between">
-                <span>Leave Deductions</span>
-                <span>Amount (&#8377;)</span>
-              </div>
-              <div class="divide-y divide-slate-100 p-2 space-y-1">
-                <div class="flex justify-between py-1.5 px-2 text-slate-600">
-                  <span>Payment Cycle Base</span>
-                  <span class="font-semibold text-slate-800 font-mono">30 Days</span>
-                </div>
-                <div class="flex justify-between py-1.5 px-2 text-slate-600">
-                  <span>Days Payable</span>
-                  <span class="font-semibold text-slate-800 font-mono">{{ payslip?.payableDays }} / 30 Days</span>
-                </div>
-                <div class="flex justify-between py-1.5 px-2 text-slate-600">
-                  <span>Unpaid Absences / Leaves</span>
-                  <span class="font-semibold text-rose-600 font-mono">
-                    {{ getUnpaidLeavesCount() }} Days
-                  </span>
-                </div>
-                <div class="flex justify-between py-1.5 px-2 text-slate-600">
-                  <span>Leave Deduction ({{ getUnpaidLeavesCount() }}d × &#8377;{{ payslip?.perDayRate }})</span>
-                  <span class="font-semibold text-rose-600 font-mono">&#8377;{{ getLeaveDeductionAmount() }}</span>
-                </div>
-                <div class="flex justify-between py-1.5 px-2 font-bold text-rose-800 bg-rose-50/50 rounded mt-2">
-                  <span>Total Deductions (Leaves only)</span>
-                  <span class="font-mono">&#8377;{{ getLeaveDeductionAmount() }}</span>
-                </div>
-              </div>
-            </div>
+                <!-- 2. Unpaid Leave Deductions (if leaves > 0) -->
+                <tr *ngIf="getUnpaidLeavesCount() !== '0' && getUnpaidLeavesCount() !== '0.0'" class="bg-rose-50/40 text-rose-900 hover:bg-rose-50/60 transition-colors">
+                  <td class="py-3 px-4">
+                    <div class="font-bold text-rose-800 text-sm">Unpaid Leave Deduction</div>
+                    <div class="text-[10px] text-rose-600">Deduction for absences & half-days</div>
+                  </td>
+                  <td class="py-3 px-4 text-center font-mono font-semibold text-rose-700">
+                    - {{ getUnpaidLeavesCount() }} Days × &#8377;{{ payslip?.perDayRate }}
+                  </td>
+                  <td class="py-3 px-4 text-right font-mono font-bold text-rose-700 text-sm">
+                    - &#8377;{{ getLeaveDeductionAmount() }}
+                  </td>
+                </tr>
 
+                <!-- 3. Earned Basic Salary -->
+                <tr class="bg-slate-50/60 hover:bg-slate-50 transition-colors">
+                  <td class="py-3 px-4">
+                    <div class="font-bold text-slate-900 text-sm">Earned Basic Pay</div>
+                    <div class="text-[10px] text-slate-400">Base Salary minus Leave Deductions</div>
+                  </td>
+                  <td class="py-3 px-4 text-center font-mono font-bold text-blue-700">
+                    {{ payslip?.payableDays }} Payable Days
+                  </td>
+                  <td class="py-3 px-4 text-right font-mono font-extrabold text-slate-900 text-sm">
+                    &#8377;{{ getEarnedBasicPay() }}
+                  </td>
+                </tr>
+
+                <!-- 4. Loan Sourcing Incentive (if any) -->
+                <tr *ngIf="(payslip?.totalIncentive || payslip?.allowances?.incentive) > 0" class="bg-emerald-50/40 text-emerald-900 hover:bg-emerald-50/60 transition-colors">
+                  <td class="py-3 px-4">
+                    <div class="font-bold text-emerald-900 text-sm">Loan Sourcing Incentive</div>
+                    <div class="text-[10px] text-emerald-600">Sourcing commission from &#8377;{{ (payslip?.totalLoanDisbursed || 0).toLocaleString() }} disbursed</div>
+                  </td>
+                  <td class="py-3 px-4 text-center font-mono font-semibold text-emerald-700">
+                    Monthly Sourcing Tier
+                  </td>
+                  <td class="py-3 px-4 text-right font-mono font-black text-emerald-700 text-sm">
+                    + &#8377;{{ (payslip?.totalIncentive || payslip?.allowances?.incentive || 0).toLocaleString() }}
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
           </div>
 
           <!-- Net Salary Highlight Card -->

@@ -205,9 +205,12 @@ export class PayslipModalComponent {
 
   getLeaveDeductionAmount(): string {
     if (!this.payslip) return '0';
-    const workingDays = this.payslip.totalWorkingDays || 27;
+    if (this.payslip.leaveDeduction != null) {
+      return Number(this.payslip.leaveDeduction).toLocaleString();
+    }
+    const workingDays = this.payslip.totalWorkingDays || 30;
     const payableDays = this.payslip.payableDays !== undefined ? this.payslip.payableDays : workingDays;
-    const perDayRate = this.payslip.perDayRate || (this.payslip.baseSalary / workingDays);
+    const perDayRate = this.payslip.perDayRate || (this.payslip.baseSalary / 30);
     const deduction = Math.max(0, Math.round((workingDays - payableDays) * perDayRate));
     return deduction.toLocaleString();
   }

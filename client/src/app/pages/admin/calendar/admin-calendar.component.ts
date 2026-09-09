@@ -693,11 +693,12 @@ export class AdminCalendarComponent implements OnInit {
 
     this.calendarDays = days;
 
-    const payableDays = Math.min(30, Number((presentCount + (0.5 * halfDayCount) + holidayCount).toFixed(2)));
+    const totalLeaveDays = Number((leaveCount + (0.5 * halfDayCount)).toFixed(2));
+    const payableDays = Math.max(0, Math.min(30, Number((30 - totalLeaveDays).toFixed(2))));
     this.stats = {
       presentDays: presentCount,
       halfDays: halfDayCount,
-      leaves: leaveCount,
+      leaves: totalLeaveDays,
       holidays: holidayCount,
       sundays: sundayCount,
       payableDays

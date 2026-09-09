@@ -106,9 +106,11 @@ function calculateEmployeePayroll({
 
   const paidLeaves = approvedLeaves;
 
-  // 3. Payable Days = Days Present + (0.5 * Half-Days) + Paid Holidays + Paid Leaves
-  const rawPayableDays = presentDays + (0.5 * halfDays) + paidHolidays + paidLeaves;
-  const payableDays = Math.min(rawPayableDays, standardDays);
+  // 3. Flat 30-Day Payment Cycle Rule:
+  // - Fixed calculation base: 30 Days
+  // - Deduct ONLY for unpaid leaves and half-day absences (each full-day leave = 1.0 day, each half-day = 0.5 day)
+  const totalLeaveDeductionDays = Math.max(0, unpaidLeaves - paidLeaves) + (0.5 * halfDays);
+  const payableDays = Math.max(0, Math.min(standardDays, Number((standardDays - totalLeaveDeductionDays).toFixed(2))));
 
   // 4. Tally Loan Disbursements for this month
   let totalLoanDisbursed = 0;

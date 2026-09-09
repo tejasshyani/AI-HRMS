@@ -1,0 +1,12 @@
+{
+	"appId": "com.fingoal.hrms",
+	"appName": "FinGoal HRMS",
+	"webDir": "dist/fingoal-hrms/browser",
+	"server": {
+		"androidScheme": "https",
+		"cleartext": true
+	},
+	"android": {
+		"allowMixedContent": true
+	}
+}

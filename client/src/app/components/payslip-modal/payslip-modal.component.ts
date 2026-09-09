@@ -75,14 +75,10 @@ import { AppLogoComponent } from '../logo/app-logo.component';
               <span>Attendance & Payroll Summary (Fixed 30-Day Basis)</span>
               <span class="text-blue-700 font-mono">Per-Day Rate: &#8377;{{ payslip?.perDayRate?.toLocaleString() }}/day</span>
             </div>
-            <div class="grid grid-cols-3 sm:grid-cols-6 divide-x divide-y sm:divide-y-0 divide-slate-200 bg-white text-center py-2">
+            <div class="grid grid-cols-2 sm:grid-cols-5 divide-x divide-y sm:divide-y-0 divide-slate-200 bg-white text-center py-2">
               <div class="p-2">
                 <div class="text-[10px] text-slate-400 font-medium">Payment Cycle</div>
                 <div class="font-bold text-slate-800 text-sm mt-0.5">30 Days</div>
-              </div>
-              <div class="p-2">
-                <div class="text-[10px] text-emerald-600 font-medium">Present Days</div>
-                <div class="font-bold text-emerald-700 text-sm mt-0.5">{{ payslip?.presentDays || 0 }}</div>
               </div>
               <div class="p-2">
                 <div class="text-[10px] text-amber-600 font-medium">Half-Days (0.5)</div>
